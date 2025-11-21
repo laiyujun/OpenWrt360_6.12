@@ -7,20 +7,34 @@ on:
 
 jobs:
 
-  IPQ60XX-6_12-WIFI:
-    uses: ./.github/workflows/IPQ60XX-6.12-WIFI.yml
+  IPQ60XX-6_12-Libwrt:
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'IPQ60XX'
 
-  IPQ807X-6_12-WIFI:
-    uses: ./.github/workflows/IPQ807X-6.12-WIFI.yml
+  IPQ807X-6_12-Libwrt:
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'IPQ807X'
 
-  Arthur-Athena-Taiyi-6_12-WIFI:
-    uses: ./.github/workflows/Arthur&Athena&Taiyi-6.12-WIFI.yml
+  Arthur-Athena-Taiyi-6_12-Libwrt:
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'Arthur&Athena&Taiyi'
 
   x86-64-6_12-WIFI:
-    uses: ./.github/workflows/x86-64-6.12-WIFI.yml
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'x86-64'
+      WRT_SOURCE: 'immortalwrt/immortalwrt'
+      WRT_BRANCH: 'master'
 
   RAX3000M-6_12-WIFI:
-    uses: ./.github/workflows/RAX3000M-6.12-WIFI.yml
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'RAX3000M'
+      WRT_SOURCE: 'immortalwrt/immortalwrt'
+      WRT_BRANCH: 'master'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml

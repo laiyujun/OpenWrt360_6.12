@@ -4,33 +4,66 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
+        description: '编译平台. [ Arthur&Athena&Taiyi, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
         required: true
         type: string
-      WRT_REPO:
-        required: true
-        type: string
-      WRT_BRANCH:
-        required: true
-        type: string
+        default: 'Arthur&Athena&Taiyi'
       WRT_SOURCE:
+        description: '源码仓库名. [ LiBwrt-op/openwrt-6.x, laipeng668/openwrt-6.x, laipeng668/immortalwrt, immortalwrt/immortalwrt ]'
         required: true
         type: string
+        default: 'LiBwrt-op/openwrt-6.x'
+      WRT_BRANCH:
+        description: '源码分支名. [ master, main, k6.12-nss ]'
+        required: true
+        type: string
+        default: 'k6.12-nss'
       WRT_PATCH:
+        description: '打patch开关. [ 是, 否 ]'
         required: true
         type: string
+        default: '否'
+  workflow_dispatch:
+    inputs:
+      WRT_TARGET:
+        default: 'Arthur&Athena&Taiyi'
+        required: true
+        type: choice
+        description: '配置文件名'
+        options: [ 'Arthur&Athena&Taiyi', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
+      WRT_SOURCE:
+        description: '源码仓库名'
+        required: true
+        default: 'LiBwrt-op/openwrt-6.x'
+        type: choice
+        options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'King-Of-Knights/openwrt-6.x', 'LiBwrt-op/openwrt-6.x' ]
+      WRT_BRANCH:
+        default: 'k6.12-nss'
+        required: true
+        description: 'branch name'
+        type: choice
+        options:
+          - master
+          - main
+          - k6.12-nss
       WRT_COMMIT:
+        description: '可编译代码commit id,用于回滚到某个可编译版本'
         required: false
         type: string
       WRT_PACKAGE:
+        description: '添加编译包全名 luci-app-xxx'
         required: false
         type: string
-      WRT_TEST:
-        required: false
-        type: string
+      WRT_PATCH:
+        description: '打patch开关'
+        required: true
+        default: '否'
+        type: choice
+        options: [ 是, 否 ]
 
 env:
-  REPO_URL: ${{inputs.WRT_REPO}}
-  REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main'}}
+  REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
+  REPO_BRANCH: ${{inputs.WRT_BRANCH || 'k6.12-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   #DIY_SCRIPT: diy-script.sh
@@ -42,13 +75,13 @@ env:
   TOOLCHAIN_TAG: toolchain
   TZ: Asia/Shanghai
 
-  #GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  WRT_REPO: ${{inputs.WRT_REPO}}
-  WRT_BRANCH: ${{inputs.WRT_BRANCH}}
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#  WRT_REPO: ${{inputs.WRT_REPO}}
+#  WRT_BRANCH: ${{inputs.WRT_BRANCH}}
   WRT_PATCH: ${{inputs.WRT_PATCH}}
   WRT_COMMIT: ${{inputs.WRT_COMMIT}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
-  WRT_TEST: ${{inputs.WRT_TEST}}
+#  WRT_TEST: ${{inputs.WRT_TEST}}
 
 jobs:
   Build:
@@ -122,11 +155,9 @@ jobs:
           
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
           export WRT_CI=$(basename $GITHUB_WORKSPACE)
-          export WRT_VER=$(echo $WRT_REPO | cut -d '/' -f 5-)-$WRT_BRANCH
 
           echo "WRT_DATE=$WRT_DATE" >> $GITHUB_ENV
           echo "WRT_CI=$WRT_CI" >> $GITHUB_ENV
-          echo "WRT_VER=$WRT_VER" >> $GITHUB_ENV
 
       - name: Check Scripts
         run: |

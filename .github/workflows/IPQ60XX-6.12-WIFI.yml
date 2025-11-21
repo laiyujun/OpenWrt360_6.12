@@ -9,6 +9,17 @@ on:
   #推送代码编译
   #push:
   workflow_call:
+    inputs:
+      SOURCE:
+        description: 'repo source name. [ LiBwrt-op/openwrt-6.x, laipeng668/openwrt-6.x, laipeng668/immortalwrt, immortalwrt/immortalwrt ]'
+        default: 'LiBwrt-op/openwrt-6.x'
+        required: true
+        type: string
+      BRANCH:
+        default: 'k6.12-nss'
+        required: true
+        description: 'branch name. [ master, main, k6.12-nss ]'
+        type: string
   workflow_dispatch:
     inputs:
       SOURCE:
