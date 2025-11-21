@@ -7,20 +7,20 @@ on:
         description: '编译平台. [ Arthur&Athena&Taiyi, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
         required: true
         type: string
-        default: 'Arthur&Athena&Taiyi'
+        default: 'IPQ60XX'
       WRT_SOURCE:
         description: '源码仓库名. [ LiBwrt-op/openwrt-6.x, laipeng668/openwrt-6.x, laipeng668/immortalwrt, immortalwrt/immortalwrt ]'
-        required: true
+        required: false
         type: string
         default: 'LiBwrt-op/openwrt-6.x'
       WRT_BRANCH:
         description: '源码分支名. [ master, main, k6.12-nss ]'
-        required: true
+        required: false
         type: string
         default: 'k6.12-nss'
       WRT_PATCH:
         description: '打patch开关. [ 是, 否 ]'
-        required: true
+        required: false
         type: string
         default: '否'
   workflow_dispatch:
