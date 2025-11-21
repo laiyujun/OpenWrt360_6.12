@@ -1,0 +1,26 @@
+name: Trigger-All-Workflows  # 主要工作流的名称
+
+on:
+  workflow_dispatch:  # 手动触发：通过 GitHub UI 来触发
+  schedule:
+    - cron: 0 20 * * 5  # 北京时间星期六凌晨4点，定时触发
+
+jobs:
+
+  IPQ60XX-6_12-WIFI:
+    uses: ./.github/workflows/IPQ60XX-6.12-WIFI.yml
+
+  IPQ807X-6_12-WIFI:
+    uses: ./.github/workflows/IPQ807X-6.12-WIFI.yml
+
+  Arthur-Athena-Taiyi-6_12-WIFI:
+    uses: ./.github/workflows/Arthur&Athena&Taiyi-6.12-WIFI.yml
+
+  x86-64-6_12-WIFI:
+    uses: ./.github/workflows/x86-64-6.12-WIFI.yml
+
+  RAX3000M-6_12-WIFI:
+    uses: ./.github/workflows/RAX3000M-6.12-WIFI.yml
+
+  Delete-Old-Workflows:
+    uses: ./.github/workflows/Delete-Old-Workflows.yml

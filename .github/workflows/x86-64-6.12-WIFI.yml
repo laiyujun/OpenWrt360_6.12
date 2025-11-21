@@ -4,10 +4,11 @@ name: x86-64-6.12-WIFI
 #CI计划
 on:
   #自动编译：每个星期五凌晨
-  schedule:
-    - cron: 0 12 * * 5
+#  schedule:
+#    - cron: 0 12 * * 5
   #推送代码编译
   #push:
+  workflow_call:
   workflow_dispatch:
     inputs:
       SOURCE:
