@@ -11,16 +11,22 @@ jobs:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'IPQ60XX'
+      WRT_SOURCE: 'LiBwrt-op/openwrt-6.x'
+      WRT_BRANCH: 'k6.12-nss'
 
   IPQ807X-6_12-Libwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'IPQ807X'
+      WRT_SOURCE: 'LiBwrt-op/openwrt-6.x'
+      WRT_BRANCH: 'k6.12-nss'
 
   Arthur-Athena-Taiyi-6_12-Libwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'Arthur&Athena&Taiyi'
+      WRT_SOURCE: 'LiBwrt-op/openwrt-6.x'
+      WRT_BRANCH: 'k6.12-nss'
 
   x86-64-6_12-WIFI:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
