@@ -86,6 +86,7 @@ env:
 jobs:
   Build:
     runs-on: ubuntu-24.04
+    name: build firmware for ${{ inputs.WRT_TARGET }}
 
     steps:
       - name: Check Server Performance
