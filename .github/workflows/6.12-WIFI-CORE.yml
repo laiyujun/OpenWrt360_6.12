@@ -76,6 +76,7 @@ env:
   TZ: Asia/Shanghai
 
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  WRT_TARGET: ${{inputs.WRT_TARGET}}
 #  WRT_REPO: ${{inputs.WRT_REPO}}
 #  WRT_BRANCH: ${{inputs.WRT_BRANCH}}
   WRT_PATCH: ${{inputs.WRT_PATCH}}
@@ -137,7 +138,11 @@ jobs:
           echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
           VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
           echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-          VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
+          if env.WRT_TARGET == 'RAX3000M' then
+            VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' include/kernel-5.15)
+          else
+            VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
+          fi
           echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
 
       - name: Generate Variables
