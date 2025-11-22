@@ -34,7 +34,7 @@ jobs:
     with:
       WRT_TARGET: 'RAX3000M'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'master'
+      WRT_BRANCH: 'openwrt-23.05'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml
