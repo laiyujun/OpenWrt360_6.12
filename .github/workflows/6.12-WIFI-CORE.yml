@@ -212,7 +212,7 @@ jobs:
           
           cat $GITHUB_WORKSPACE/$CONFIG_FILE $GITHUB_WORKSPACE/$GENERAL_CONFIG_FILE > .config
           
-          $GITHUB_WORKSPACE/scripts/init-settings.sh
+          $GITHUB_WORKSPACE/scripts/Settings.sh
           
           make defconfig
 
