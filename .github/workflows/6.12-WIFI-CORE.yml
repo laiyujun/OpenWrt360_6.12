@@ -23,6 +23,11 @@ on:
         required: false
         type: string
         default: '否'
+      WRT_FIRMWARE_BODY:
+        description: 'Release 说明信息'
+        required: false
+        type: string
+        default: '这是开启全功能NSS的6.12内核固件，默认主题为Argon'
   workflow_dispatch:
     inputs:
       WRT_TARGET:
@@ -60,6 +65,11 @@ on:
         default: '否'
         type: choice
         options: [ 是, 否 ]
+      WRT_FIRMWARE_BODY:
+        description: 'Release 说明信息'
+        required: false
+        default: '这是开启全功能NSS的6.12内核固件，默认主题为Argon'
+        type: string
 
 env:
   REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
@@ -72,6 +82,7 @@ env:
   UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
   FIRMWARE_TAG: ${{inputs.WRT_TARGET}}
+  FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY}}
   TOOLCHAIN_TAG: toolchain
   TZ: Asia/Shanghai
 
@@ -280,7 +291,7 @@ jobs:
           body: |
             **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
             ### 📒 固件信息
-            - 这是开启全功能NSS的6.12内核固件，默认主题为Argon
+            - ${{ env.FIRMWARE_BODY }}
             - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
             - ⚽ 固件源码: ${{ env.REPO_URL }}
             - 💝 源码分支: ${{ env.REPO_BRANCH }}
