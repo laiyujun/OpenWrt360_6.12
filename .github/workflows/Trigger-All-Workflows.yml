@@ -22,7 +22,7 @@ jobs:
     with:
       WRT_TARGET: 'Arthur&Athena&Taiyi'
 
-  x86-64-6_12-WIFI:
+  x86-64-6_12-Immortalwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'x86-64'
@@ -30,7 +30,7 @@ jobs:
       WRT_BRANCH: 'master'
       WRT_FIRMWARE_BODY: '这是基于ImmortalWrt主线制作的个人定制固件，默认主题为Argon'
 
-  RAX3000M-6_12-WIFI:
+  RAX3000M-5_15-Immortalwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'RAX3000M'
