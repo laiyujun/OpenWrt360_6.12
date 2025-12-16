@@ -35,8 +35,9 @@ jobs:
     with:
       WRT_TARGET: 'RAX3000M'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'openwrt-23.05'
-      WRT_FIRMWARE_BODY: '这是CMCC RAX3000M NAND version (custom U-Boot layout)的5.15内核固件，默认主题为Argon'
+      WRT_BRANCH: 'master'
+      WRT_FIRMWARE_BODY: '这是CMCC RAX3000M 基于ImmortalWrt主线制作的个人定制固件，默认主题为Argon'
+      # WRT_FIRMWARE_BODY: '这是CMCC RAX3000M NAND version (custom U-Boot layout)的5.15内核固件，默认主题为Argon'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml

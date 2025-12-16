@@ -14,7 +14,7 @@ on:
         type: string
         default: 'LiBwrt-op/openwrt-6.x'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, k6.12-nss ]'
+        description: '源码分支名. [ master, main, k6.12-nss, openwrt-23.05 ]'
         required: false
         type: string
         default: 'k6.12-nss'
@@ -51,6 +51,7 @@ on:
           - master
           - main
           - k6.12-nss
+          - openwrt-23.05
       WRT_COMMIT:
         description: '可编译代码commit id,用于回滚到某个可编译版本'
         required: false
