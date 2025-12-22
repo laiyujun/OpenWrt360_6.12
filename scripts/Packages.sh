@@ -53,9 +53,9 @@ UPDATE_PACKAGE "easymesh" "kenzok8/openwrt-packages" "master" "pkg"
 #UPDATE_PACKAGE "ddnsto" "linkease/nas-packages" "master" "pkg"
 #UPDATE_PACKAGE "luci-app-ddnsto" "linkease/nas-packages-luci" "main" "pkg"
 #iStorex && dependency
-#UPDATE_PACKAGE "istorex" "linkease/nas-packages-luci" "main" "pkg"
-#UPDATE_PACKAGE "quickstart" "linkease/nas-packages" "master" "pkg"
-#UPDATE_PACKAGE "luci-app-quickstart" "linkease/nas-packages-luci" "main" "pkg"
+UPDATE_PACKAGE "istorex" "linkease/nas-packages-luci" "main" "pkg"
+UPDATE_PACKAGE "quickstart" "linkease/nas-packages" "master" "pkg"
+UPDATE_PACKAGE "luci-app-quickstart" "linkease/nas-packages-luci" "main" "pkg"
 #UPDATE_PACKAGE "istoreenhance" "linkease/nas-packages" "master" "pkg"
 #UPDATE_PACKAGE "luci-app-istoreenhance" "linkease/nas-packages-luci" "main" "pkg"
 

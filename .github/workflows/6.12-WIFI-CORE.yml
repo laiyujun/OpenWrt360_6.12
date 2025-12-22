@@ -193,7 +193,7 @@ jobs:
           cd $OPENWRT_PATH
           
           # sed -i '/nss_packages/ s/^/#/' feeds.conf.default
-          # sed -i '$a src-git iStore https://github.com/linkease/istore;main' feeds.conf.default
+          sed -i '$a src-git iStore https://github.com/linkease/istore;main' feeds.conf.default
           
           ./scripts/feeds update -a
           ./scripts/feeds install -a
@@ -204,7 +204,7 @@ jobs:
           git config --global user.name "OpenWrt Builder"
           git config --global user.email "buster-openwrt@ovvo.uk"
           cd $OPENWRT_PATH
-          wget https://raw.githubusercontent.com/laiyujun/OpenWrt360_6.1/main/0001-fix-upnp.patch
+          wget https://raw.githubusercontent.com/laiyujun/OpenWrt360_6.12/main/0001-fix-upnp.patch
           git am 0001-fix-upnp.patch
 
       - name: Load Custom Packages
