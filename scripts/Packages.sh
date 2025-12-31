@@ -52,6 +52,8 @@ UPDATE_PACKAGE "easymesh" "kenzok8/openwrt-packages" "master" "pkg"
 #linkease app
 #UPDATE_PACKAGE "ddnsto" "linkease/nas-packages" "master" "pkg"
 #UPDATE_PACKAGE "luci-app-ddnsto" "linkease/nas-packages-luci" "main" "pkg"
+git clone --depth=1 https://github.com/linkease/istore-ui istore-ui
+git clone --depth=1 https://github.com/linkease/istore istore
 #iStorex && dependency
 UPDATE_PACKAGE "istorex" "linkease/nas-packages-luci" "main" "pkg"
 UPDATE_PACKAGE "quickstart" "linkease/nas-packages" "master" "pkg"
@@ -77,11 +79,11 @@ function git_sparse_clone() {
   cd .. && rm -rf $repodir
 }
 git clone --depth=1 https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
-git clone --depth=1 https://github.com/sbwml/luci-app-openlist2 package/openlist
+git clone --depth=1 https://github.com/sbwml/luci-app-openlist2 luci-app-openlist2
 git_sparse_clone ariang https://github.com/laipeng668/packages net/ariang
-git clone --depth=1 https://github.com/gdy666/luci-app-lucky package/luci-app-lucky
-git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led package/luci-app-athena-led
-chmod +x package/luci-app-athena-led/root/etc/init.d/athena_led package/luci-app-athena-led/root/usr/sbin/athena-led
+git clone --depth=1 https://github.com/gdy666/luci-app-lucky luci-app-lucky
+git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led luci-app-athena-led
+chmod +x ./luci-app-athena-led/root/etc/init.d/athena_led ./luci-app-athena-led/root/usr/sbin/athena-led
 
 #更新软件包版本
 UPDATE_VERSION() {

@@ -193,7 +193,7 @@ jobs:
           cd $OPENWRT_PATH
           
           # sed -i '/nss_packages/ s/^/#/' feeds.conf.default
-          sed -i '$a src-git iStore https://github.com/linkease/istore;main' feeds.conf.default
+          # sed -i '$a src-git iStore https://github.com/linkease/istore;main' feeds.conf.default
           
           ./scripts/feeds update -a
           ./scripts/feeds install -a
