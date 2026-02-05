@@ -40,9 +40,9 @@ UPDATE_PACKAGE "alpha-config" "animegasan/luci-app-alpha-config" "master"
 
 #UPDATE_PACKAGE "homeproxy" "VIKINGYFY/homeproxy" "main"
 UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
-UPDATE_PACKAGE "passwall-packages" "xiaorouji/openwrt-passwall-packages" "main"
-UPDATE_PACKAGE "passwall" "xiaorouji/openwrt-passwall" "main" "pkg"
-UPDATE_PACKAGE "passwall2" "xiaorouji/openwrt-passwall2" "main" "pkg"
+UPDATE_PACKAGE "passwall-packages" "Openwrt-Passwall/openwrt-passwall-packages" "main"
+UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
+UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 ##UPDATE_PACKAGE "ssr-plus" "fw876/helloworld" "master"
 
 UPDATE_PACKAGE "luci-app-gecoosac" "lwb1978/openwrt-gecoosac" "main"
