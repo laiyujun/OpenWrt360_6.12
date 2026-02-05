@@ -64,10 +64,8 @@ UPDATE_PACKAGE "luci-app-quickstart" "linkease/nas-packages-luci" "main" "pkg"
 #luci-app-oaf (destan19)
 UPDATE_PACKAGE "luci-app-oaf" "destan19/OpenAppFilter" "master"
 
-if [[ $WRT_REPO == *"openwrt-6.x"* ]]; then
-#	UPDATE_PACKAGE "qmi-wwan" "immortalwrt/wwan-packages" "master" "pkg"
-  echo "This is the openwrt-6.x repos."
-fi
+#luci-app-onliner
+UPDATE_PACKAGE "luci-app-onliner" "xuanranran/openwrt-package" "master" "pkg"
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
