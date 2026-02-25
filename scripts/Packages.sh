@@ -67,7 +67,7 @@ UPDATE_PACKAGE "luci-app-oaf" "destan19/OpenAppFilter" "master"
 #luci-app-onliner
 UPDATE_PACKAGE "luci-app-onliner" "xuanranran/openwrt-package" "master" "pkg"
 #luci-app-accesscontrol
-UPDATE_PACKAGE "luci-app-accesscontrol" "NueXini/NueXini_Packages" "main" "pkg"
+UPDATE_PACKAGE "luci-app-accesscontrol-plus" "kingyond/luci-app-accesscontrol-plus" "main" "pkg"
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
