@@ -82,7 +82,7 @@ function git_sparse_clone() {
 git clone --depth=1 https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
 git clone --depth=1 https://github.com/sbwml/luci-app-openlist2 luci-app-openlist2
 #git_sparse_clone ariang https://github.com/laipeng668/packages net/ariang
-git_sparse_clone master https://github.com/coolsnowwolf/luci applications/luci-app-accesscontrol
+#git_sparse_clone master https://github.com/coolsnowwolf/luci applications/luci-app-accesscontrol
 git clone --depth=1 https://github.com/gdy666/luci-app-lucky luci-app-lucky
 git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led luci-app-athena-led
 chmod +x ./luci-app-athena-led/root/etc/init.d/athena_led ./luci-app-athena-led/root/usr/sbin/athena-led
