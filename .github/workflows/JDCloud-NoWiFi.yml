@@ -1,4 +1,4 @@
-name: IPQ60XX-6.12-WIFI-CORE
+name: JDCloud-6.12-NoWiFi
 
 on:
   schedule:
