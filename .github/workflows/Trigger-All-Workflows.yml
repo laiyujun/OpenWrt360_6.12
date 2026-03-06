@@ -20,7 +20,7 @@ jobs:
   Arthur-Athena-Taiyi-6_12-Libwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
-      WRT_TARGET: 'Arthur&Athena&Taiyi'
+      WRT_TARGET: 'JDCloud'
 
   x86-64-6_12-Immortalwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml

@@ -1,13 +1,15 @@
 name: IPQ60XX-6.12-WIFI-CORE
 
 on:
+  schedule:
+    - cron: 1 16 * * 5  # 北京时间星期六凌晨0点，定时触发
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
+        description: '编译平台. [ JDCloud, JDCloud.NoWiFi, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
         required: true
         type: string
-        default: 'IPQ60XX'
+        default: 'JDCloud.NoWiFi'
       WRT_SOURCE:
         description: '源码仓库名. [ LiBwrt-op/openwrt-6.x, laipeng668/openwrt-6.x, laipeng668/immortalwrt, immortalwrt/immortalwrt ]'
         required: false
@@ -31,11 +33,11 @@ on:
   workflow_dispatch:
     inputs:
       WRT_TARGET:
-        default: 'JDCloud'
+        default: 'JDCloud.NoWiFi'
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'JDCloud', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
+        options: [ 'JDCloud', 'JDCloud.NoWiFi', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
@@ -221,7 +223,7 @@ jobs:
           
           rm -rf ./tmp* ./.config*
           
-          cat $GITHUB_WORKSPACE/$CONFIG_FILE $GITHUB_WORKSPACE/$GENERAL_CONFIG_FILE > .config
+          cat $GITHUB_WORKSPACE/$CONFIG_FILE > .config
           
           $GITHUB_WORKSPACE/scripts/Settings.sh
           
