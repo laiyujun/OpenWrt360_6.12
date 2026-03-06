@@ -45,7 +45,7 @@ UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
 UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 ##UPDATE_PACKAGE "ssr-plus" "fw876/helloworld" "master"
 
-UPDATE_PACKAGE "luci-app-gecoosac" "lwb1978/openwrt-gecoosac" "main"
+UPDATE_PACKAGE "luci-app-gecoosac" "openwrt-fork/openwrt-gecoosac" "main"
 
 UPDATE_PACKAGE "luci-app-adguardhome" "xiaoxiao29/luci-app-adguardhome" "master"
 UPDATE_PACKAGE "easymesh" "kenzok8/openwrt-packages" "master" "pkg"
