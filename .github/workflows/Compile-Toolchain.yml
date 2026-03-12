@@ -61,101 +61,101 @@ jobs:
     runs-on: ubuntu-24.04
     name: build toolchain for ${{ inputs.WRT_TARGET }}
 
-  steps:
-    - name: Check Server Performance
-      run: |
-        echo "警告⚠"
-        echo "是否打patch：${{ env.WRT_PATCH }}"
-        echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
-        echo -e "已知CPU型号（降序）：7763，8370C，8272CL，8171M，E5-2673 \n"
-        echo "--------------------------CPU信息--------------------------"
-        echo "CPU物理数量：$(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
-        echo -e "CPU核心信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
-        echo "--------------------------内存信息--------------------------"
-        echo "已安装内存详细信息："
-        echo -e "$(sudo lshw -short -C memory | grep GiB) \n"
-        echo "--------------------------硬盘信息--------------------------"
-        echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+    steps:
+      - name: Check Server Performance
+        run: |
+          echo "警告⚠"
+          echo "是否打patch：${{ env.WRT_PATCH }}"
+          echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
+          echo -e "已知CPU型号（降序）：7763，8370C，8272CL，8171M，E5-2673 \n"
+          echo "--------------------------CPU信息--------------------------"
+          echo "CPU物理数量：$(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
+          echo -e "CPU核心信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+          echo "--------------------------内存信息--------------------------"
+          echo "已安装内存详细信息："
+          echo -e "$(sudo lshw -short -C memory | grep GiB) \n"
+          echo "--------------------------硬盘信息--------------------------"
+          echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
-    - name: Initialization Environment
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo -E apt-get -y update
-        sudo -E apt-get -y install dos2unix
-        sudo -E apt-get -y install $(curl -fsSL ophub.org/ubuntu2404-make-openwrt-depends)
-        sudo -E systemctl daemon-reload
-        sudo timedatectl set-timezone "$TZ"
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get -y update
+          sudo -E apt-get -y install dos2unix
+          sudo -E apt-get -y install $(curl -fsSL ophub.org/ubuntu2404-make-openwrt-depends)
+          sudo -E systemctl daemon-reload
+          sudo timedatectl set-timezone "$TZ"
 
-    - name: Combine Disks
-      uses: easimon/maximize-build-space@master
-      with:
-        swap-size-mb: 1024
-        temp-reserve-mb: 100
-        root-reserve-mb: 1024
+      - name: Combine Disks
+        uses: easimon/maximize-build-space@master
+        with:
+          swap-size-mb: 1024
+          temp-reserve-mb: 100
+          root-reserve-mb: 1024
 
-    - name: Checkout
-      uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@main
 
-    - name: Clone Source Code
-      run: |
-        df -hT $GITHUB_WORKSPACE
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        cd openwrt
-        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
-        VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
-        echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV        
-        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
-        echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
+      - name: Clone Source Code
+        run: |
+          df -hT $GITHUB_WORKSPACE
+          git clone $REPO_URL -b $REPO_BRANCH openwrt
+          cd openwrt
+          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+          VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
+          echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV        
+          VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
+          echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
 
-    - name: Generate Variables
-      run: |
-        cp $CONFIG_FILE $OPENWRT_PATH/.config
-        cd $OPENWRT_PATH
-        make defconfig > /dev/null 2>&1
-        SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
-        echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
-        DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
-        echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
-        DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
-        echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
-        echo "HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
-        echo "CACHE_DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+      - name: Generate Variables
+        run: |
+          cp $CONFIG_FILE $OPENWRT_PATH/.config
+          cd $OPENWRT_PATH
+          make defconfig > /dev/null 2>&1
+          SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
+          echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
+          DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
+          echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
+          DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
+          echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+          echo "HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+          echo "CACHE_DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+  
+          export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
+          export WRT_CI=$(basename $GITHUB_WORKSPACE)
+  
+          echo "WRT_DATE=$WRT_DATE" >> $GITHUB_ENV
+          echo "WRT_CI=$WRT_CI" >> $GITHUB_ENV
 
-        export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
-        export WRT_CI=$(basename $GITHUB_WORKSPACE)
+      - name: Check Scripts
+        run: |
+          find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
-        echo "WRT_DATE=$WRT_DATE" >> $GITHUB_ENV
-        echo "WRT_CI=$WRT_CI" >> $GITHUB_ENV
+      - name: Compile Toolchain
+        if: env.REBUILD_TOOLCHAIN == 'true'
+        id: toolchain
+        run: |
+          cd $OPENWRT_PATH
+          make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+          $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT "make"
 
-    - name: Check Scripts
-      run: |
-        find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
+      - name: Delete Old Toolchain
+        if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag: ${{env.TOOLCHAIN_TAG}}
+          assets: '${{env.SOURCE_REPO}}-${{env.REPO_BRANCH}}-${{env.DEVICE_TARGET}}*'
+          fail-if-no-assets: false
+          fail-if-no-release: false
 
-    - name: Compile Toolchain
-      if: env.REBUILD_TOOLCHAIN == 'true'
-      id: toolchain
-      run: |
-        cd $OPENWRT_PATH
-        make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
-        $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT "make"
-
-    - name: Delete Old Toolchain
-      if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
-      uses: mknejp/delete-release-assets@v1
-      with:
-        token: ${{secrets.GITHUB_TOKEN}}
-        tag: ${{env.TOOLCHAIN_TAG}}
-        assets: '${{env.SOURCE_REPO}}-${{env.REPO_BRANCH}}-${{env.DEVICE_TARGET}}*'
-        fail-if-no-assets: false
-        fail-if-no-release: false
-
-    - name: Upload Toolchain To Release
-      if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
-      uses: softprops/action-gh-release@master
-      with:
-        name: toolchain-cache
-        tag_name: ${{env.TOOLCHAIN_TAG}}
-        token: ${{secrets.GITHUB_TOKEN}}
-        files: output/*
-        body: OpenWrt 工具链缓存
+      - name: Upload Toolchain To Release
+        if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
+        uses: softprops/action-gh-release@master
+        with:
+          name: toolchain-cache
+          tag_name: ${{env.TOOLCHAIN_TAG}}
+          token: ${{secrets.GITHUB_TOKEN}}
+          files: output/*
+          body: OpenWrt 工具链缓存
