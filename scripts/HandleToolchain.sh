@@ -49,11 +49,8 @@ download_toolchain() {
 }
 
 main() {
-  if [[ "$1" == "make" ]]; then
-    package_toolchain
-  else
     download_toolchain
-  fi
+    package_toolchain
 }
 
 # 创建toolchain缓存保存目录
