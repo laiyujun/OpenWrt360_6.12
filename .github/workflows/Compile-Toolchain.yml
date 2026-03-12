@@ -119,8 +119,10 @@ jobs:
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
           DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
-          echo "HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
-          echo "CACHE_DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          # toolchain缓存文件名
+          TOOLS_HASH=$(git log -1 --pretty=format:"%h" tools toolchain)
+          CACHE_NAME="$SOURCE_REPO-${REPO_BRANCH#*-}-$DEVICE_TARGET-cache-$TOOLS_HASH"
+          echo "CACHE_NAME=$CACHE_NAME" >> $GITHUB_ENV
   
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
           export WRT_CI=$(basename $GITHUB_WORKSPACE)
@@ -131,6 +133,9 @@ jobs:
       - name: Check Scripts
         run: |
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
+
+      - name: Load Compile Script
+        run: chmod +x $DIY_SCRIPT && ./$DIY_SCRIPT
 
       - name: Compile Toolchain
         if: env.REBUILD_TOOLCHAIN == 'true'

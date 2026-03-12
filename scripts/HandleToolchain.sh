@@ -29,7 +29,7 @@ download_toolchain() {
     local cache_xa cache_xc
     if [[ "$TOOLCHAIN" = 'true' ]]; then
         cache_xa=$(curl -sL "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
-        cache_xc=$(curl -sL "https://api.github.com/repos/haiibo/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
+        cache_xc=$(curl -sL "https://api.github.com/repos/laiyujun/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         if [[ "$cache_xa" || "$cache_xc" ]]; then
             wget -qc -t=3 "${cache_xa:-$cache_xc}"
             if [ -e *.tzst ]; then
