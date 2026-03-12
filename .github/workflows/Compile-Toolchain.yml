@@ -135,7 +135,7 @@ jobs:
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
       - name: Load Compile Script
-        run: chmod +x $DIY_SCRIPT && ./$DIY_SCRIPT
+        run: chmod +x $TOOLCHAIN_SCRIPT && ./$TOOLCHAIN_SCRIPT
 
       - name: Compile Toolchain
         if: env.REBUILD_TOOLCHAIN == 'true'
