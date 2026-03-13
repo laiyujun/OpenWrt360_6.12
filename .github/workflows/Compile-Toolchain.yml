@@ -49,7 +49,7 @@ env:
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
-  TOOLCHAIN: true
+  TOOLCHAIN_CACHE: true
   TOOLCHAIN_TAG: toolchain-cache
   TZ: Asia/Shanghai
 
@@ -58,7 +58,7 @@ env:
 
 jobs:
   Build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     name: build toolchain for ${{ inputs.WRT_TARGET }}
 
     steps:
@@ -121,8 +121,8 @@ jobs:
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
           # toolchain缓存文件名
           TOOLS_HASH=$(git log -1 --pretty=format:"%h" tools toolchain)
-          REPO_NAME=$(basename "$REPO_URL")
-          CACHE_NAME="$REPO_NAME-${REPO_BRANCH#*-}-$DEVICE_TARGET-$SUBTARGET_NAME-cache-$TOOLS_HASH"
+          REPO_NAME=$(basename "$SOURCE_REPO")
+          CACHE_NAME="$REPO_NAME-${REPO_BRANCH#*-}-$DEVICE_TARGET-$DEVICE_SUBTARGET-cache-$TOOLS_HASH"
           echo "CACHE_NAME=$CACHE_NAME" >> $GITHUB_ENV
   
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
@@ -135,7 +135,7 @@ jobs:
         run: |
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
-      - name: Load Compile Script
+      - name: Load Toolchain Script
         run: chmod +x $TOOLCHAIN_SCRIPT && ./$TOOLCHAIN_SCRIPT
 
       - name: Compile Toolchain
@@ -144,7 +144,7 @@ jobs:
         run: |
           cd $OPENWRT_PATH
           make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
-          $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT "make"
+          $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT
 
       - name: Delete Old Toolchain
         if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
@@ -152,7 +152,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag: ${{env.TOOLCHAIN_TAG}}
-          assets: '${{env.SOURCE_REPO}}-${{env.REPO_BRANCH}}-${{env.DEVICE_TARGET}}*'
+          assets: '${{env.SOURCE_REPO}}-${{env.REPO_BRANCH}}-${{env.DEVICE_TARGET}}-${{env.DEVICE_SUBTARGET}}*'
           fail-if-no-assets: false
           fail-if-no-release: false
 

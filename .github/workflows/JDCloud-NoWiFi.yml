@@ -20,11 +20,6 @@ on:
         required: false
         type: string
         default: 'main-nss'
-      WRT_PATCH:
-        description: '打patch开关. [ 是, 否 ]'
-        required: false
-        type: string
-        default: '否'
       WRT_FIRMWARE_BODY:
         description: 'Release 说明信息'
         required: false
@@ -54,20 +49,10 @@ on:
           - main
           - main-nss
           - openwrt-23.05
-      WRT_COMMIT:
-        description: '可编译代码commit id,用于回滚到某个可编译版本'
-        required: false
-        type: string
       WRT_PACKAGE:
         description: '添加编译包全名 luci-app-xxx'
         required: false
         type: string
-      WRT_PATCH:
-        description: '打patch开关'
-        required: true
-        default: '否'
-        type: choice
-        options: [ 是, 否 ]
       WRT_FIRMWARE_BODY:
         description: 'Release 说明信息'
         required: false
@@ -79,27 +64,20 @@ env:
   REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
-  #DIY_SCRIPT: diy-script.sh
-  #CLASH_KERNEL: amd64
-  CACHE_TOOLCHAIN: true
-  UPLOAD_BIN_DIR: false
-  FIRMWARE_RELEASE: true
   FIRMWARE_TAG: ${{inputs.WRT_TARGET}}
   FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY}}
-  TOOLCHAIN_TAG: toolchain
+  TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
+  TOOLCHAIN_CACHE: true
+  TOOLCHAIN_TAG: toolchain-cache
   TZ: Asia/Shanghai
 
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   WRT_TARGET: ${{inputs.WRT_TARGET}}
-#  WRT_REPO: ${{inputs.WRT_REPO}}
-#  WRT_BRANCH: ${{inputs.WRT_BRANCH}}
-  WRT_PATCH: ${{inputs.WRT_PATCH}}
-  WRT_COMMIT: ${{inputs.WRT_COMMIT}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
 
 jobs:
   Build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     name: build firmware for ${{ inputs.WRT_TARGET }}
 
     steps:
@@ -143,19 +121,10 @@ jobs:
           df -hT $GITHUB_WORKSPACE
           git clone $REPO_URL -b $REPO_BRANCH openwrt
           cd openwrt
-          ## 临时回滚到一个正常版本编译，修复后删除
-          if [ -n "$WRT_COMMIT" ]; then
-            echo "手动回滚 $REPO_URL 到 commit $WRT_COMMIT".
-            git reset --hard $WRT_COMMIT
-          fi
           echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
           VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
           echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-          ## if [ "$WRT_TARGET" == "RAX3000M" ]; then
-          ##  VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' include/kernel-5.15)
-          ## else
           VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
-          ## fi
           echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
 
       - name: Generate Variables
@@ -169,8 +138,12 @@ jobs:
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
           DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
-          echo "HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
-          echo "CACHE_DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          
+          # toolchain缓存文件名
+          TOOLS_HASH=$(git log -1 --pretty=format:"%h" tools toolchain)
+          REPO_NAME=$(basename "$SOURCE_REPO")
+          CACHE_NAME="$REPO_NAME-${REPO_BRANCH#*-}-$DEVICE_TARGET-$DEVICE_SUBTARGET-cache-$TOOLS_HASH"
+          echo "CACHE_NAME=$CACHE_NAME" >> $GITHUB_ENV
           
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
           export WRT_CI=$(basename $GITHUB_WORKSPACE)
@@ -182,14 +155,6 @@ jobs:
         run: |
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
-      - name: Cache Toolchain
-        if: env.CACHE_TOOLCHAIN == 'true'
-        uses: klever1988/cachewrtbuild@main
-        with:
-          ccache: false
-          mixkey: ${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}
-          prefix: ${{ env.OPENWRT_PATH }}
-
       - name: Install Feeds
         run: |
           cd $OPENWRT_PATH
@@ -200,34 +165,51 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: Apply patches
-        if: env.WRT_PATCH == '是'
-        run: |
-          git config --global user.name "OpenWrt Builder"
-          git config --global user.email "buster-openwrt@ovvo.uk"
-          cd $OPENWRT_PATH
-          wget https://raw.githubusercontent.com/laiyujun/OpenWrt360_6.12/main/0001-fix-upnp.patch
-          git am 0001-fix-upnp.patch
-
       - name: Load Custom Packages
         run: |
           cd $OPENWRT_PATH/package/
           echo "Custom Packages Here."
-
           $GITHUB_WORKSPACE/scripts/Packages.sh
           $GITHUB_WORKSPACE/scripts/Handles.sh
 
       - name: Load Custom Configuration
         run: |
           cd $OPENWRT_PATH
-          
           rm -rf ./tmp* ./.config*
-          
           cat $GITHUB_WORKSPACE/$CONFIG_FILE > .config
-          
           $GITHUB_WORKSPACE/scripts/Settings.sh
-          
           make defconfig
+
+      - name: Load Toolchain Script
+        run: chmod +x $TOOLCHAIN_SCRIPT && ./$TOOLCHAIN_SCRIPT
+
+      - name: Compile Toolchain
+        if: env.REBUILD_TOOLCHAIN == 'true'
+        id: toolchain
+        run: |
+          cd $OPENWRT_PATH
+          make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+          $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT
+
+      - name: Delete Old Toolchain
+        if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag: ${{env.TOOLCHAIN_TAG}}
+          assets: '${{env.SOURCE_REPO}}-${{env.REPO_BRANCH}}-${{env.DEVICE_TARGET}}-${{env.DEVICE_SUBTARGET}}*'
+          fail-if-no-assets: false
+          fail-if-no-release: false
+
+      - name: Upload Toolchain To Release
+        if: steps.toolchain.conclusion == 'success' || env.OUTPUT_RELEASE == 'true'
+        uses: softprops/action-gh-release@master
+        with:
+          name: toolchain-cache
+          tag_name: ${{env.TOOLCHAIN_TAG}}
+          token: ${{secrets.GITHUB_TOKEN}}
+          files: output/*
+          body: OpenWrt 工具链缓存
 
       - name: Download DL Package
         run: |
@@ -250,13 +232,6 @@ jobs:
         if: (!cancelled())
         run: df -hT
 
-      - name: Upload Bin Directory
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ env.SOURCE_REPO }}-bin-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}-${{ env.FILE_DATE }}
-          path: ${{ env.OPENWRT_PATH }}/bin
-
       - name: Organize Files
         if: steps.compile.outputs.status == 'success'
         run: |
@@ -273,15 +248,8 @@ jobs:
           rm -rf packages feeds.buildinfo version.buildinfo
           echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
 
-      - name: Upload Firmware To Artifact
-        if: steps.compile.outputs.status == 'success' && env.FIRMWARE_RELEASE != 'true'
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ env.SOURCE_REPO }}-firmware-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}-${{ env.FILE_DATE }}
-          path: ${{ env.FIRMWARE_PATH }}
-
       - name: Upload Firmware To Release
-        if: steps.compile.outputs.status == 'success' && env.FIRMWARE_RELEASE == 'true'
+        if: steps.compile.outputs.status == 'success'
         uses: ncipollo/release-action@main
         with:
           name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }}

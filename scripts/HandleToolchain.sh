@@ -27,7 +27,7 @@ package_toolchain() {
 # 下载部署toolchain缓存
 download_toolchain() {
     local cache_xa cache_xc
-    if [[ "$TOOLCHAIN" = 'true' ]]; then
+    if [[ "$TOOLCHAIN_CACHE" = 'true' ]]; then
         cache_xa=$(curl -sL "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         cache_xc=$(curl -sL "https://api.github.com/repos/laiyujun/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         if [[ "$cache_xa" || "$cache_xc" ]]; then
