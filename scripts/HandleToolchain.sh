@@ -3,7 +3,9 @@
 package_toolchain() {
   # 打包toolchain目录
   if [[ "$REBUILD_TOOLCHAIN" = 'true' ]]; then
-      cd "$OPENWRT_PATH" || exit
+      cd "$OPENWRT_PATH" || true
+      echo "📁 当前所在目录:"
+      pwd && ls -lha
       sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
       if [[ -d ".ccache" && $(du -s .ccache | cut -f1) -gt 0 ]]; then
           echo "🔍 缓存目录大小:"
@@ -30,12 +32,17 @@ download_toolchain() {
     if [[ "$TOOLCHAIN_CACHE" = 'true' ]]; then
         cache_xa=$(curl -sL "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         cache_xc=$(curl -sL "https://api.github.com/repos/laiyujun/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
+        echo "cache_xa=$cache_xa"
+        echo "cache_xc=$cache_xc"
         if [[ "$cache_xa" || "$cache_xc" ]]; then
             wget -qc -t=3 "${cache_xa:-$cache_xc}"
             if [ -e *.tzst ]; then
                 tar -I unzstd -xf *.tzst || tar -xf *.tzst
                 [ "$cache_xa" ] || (cp *.tzst "$GITHUB_WORKSPACE"/output && echo "OUTPUT_RELEASE=true" >> "$GITHUB_ENV")
                 [ -d staging_dir ] && sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
+            else
+              echo "⚠️ 未下载到最新工具链"
+              return 99
             fi
         else
             echo "REBUILD_TOOLCHAIN=true" >> "$GITHUB_ENV"
@@ -44,6 +51,7 @@ download_toolchain() {
         fi
     else
         echo "REBUILD_TOOLCHAIN=true" >> "$GITHUB_ENV"
+        echo "⚠️ TOOLCHAIN_CACHE=$TOOLCHAIN_CACHE 重新编译最新工具链"
         return 99
     fi
 }
