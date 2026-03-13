@@ -3,7 +3,6 @@
 package_toolchain() {
   # 打包toolchain目录
   if [[ "$REBUILD_TOOLCHAIN" = 'true' ]]; then
-      cd "$OPENWRT_PATH" || true
       sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
       if [[ -d ".ccache" && $(du -s .ccache | cut -f1) -gt 0 ]]; then
           echo "🔍 缓存目录大小:"
@@ -28,7 +27,6 @@ package_toolchain() {
 download_toolchain() {
     local cache_xa cache_xc
     if [[ "$TOOLCHAIN_CACHE" = 'true' ]]; then
-        cd "$OPENWRT_PATH" || true
         cache_xa=$(curl -sL "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         cache_xc=$(curl -sL "https://api.github.com/repos/laiyujun/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         echo "cache_xa=$cache_xa"

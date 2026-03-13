@@ -2,7 +2,7 @@ name: JDCloud-6.12-NoWiFi
 
 on:
   schedule:
-    - cron: 1 16 * * 5  # 北京时间星期六凌晨0点，定时触发
+    - cron: 1 17 * * 5  # 北京时间星期六凌晨0点，定时触发
   workflow_call:
     inputs:
       WRT_TARGET:
