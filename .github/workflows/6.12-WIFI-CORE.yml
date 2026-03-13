@@ -178,7 +178,9 @@ jobs:
           make defconfig
 
       - name: Load Toolchain Script
-        run: chmod +x $TOOLCHAIN_SCRIPT && ./$TOOLCHAIN_SCRIPT
+        run: |
+          cd $OPENWRT_PATH
+          chmod +x $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT && $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT
 
       - name: Compile Toolchain
         if: env.REBUILD_TOOLCHAIN == 'true'

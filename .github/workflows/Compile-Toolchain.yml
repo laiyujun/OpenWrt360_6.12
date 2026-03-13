@@ -136,7 +136,9 @@ jobs:
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
       - name: Load Toolchain Script
-        run: chmod +x $TOOLCHAIN_SCRIPT && ./$TOOLCHAIN_SCRIPT
+        run: |
+          cd $OPENWRT_PATH
+          chmod +x $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT && $GITHUB_WORKSPACE/$TOOLCHAIN_SCRIPT
 
       - name: Compile Toolchain
         if: env.REBUILD_TOOLCHAIN == 'true'

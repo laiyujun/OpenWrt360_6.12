@@ -28,6 +28,7 @@ package_toolchain() {
 download_toolchain() {
     local cache_xa cache_xc
     if [[ "$TOOLCHAIN_CACHE" = 'true' ]]; then
+        cd "$OPENWRT_PATH" || true
         cache_xa=$(curl -sL "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         cache_xc=$(curl -sL "https://api.github.com/repos/laiyujun/toolchain-cache/releases" | awk -F '"' '/download_url/{print $4}' | grep "$CACHE_NAME")
         echo "cache_xa=$cache_xa"
@@ -37,7 +38,7 @@ download_toolchain() {
             if [ -e *.tzst ]; then
                 tar -I unzstd -xf *.tzst || tar -xf *.tzst
                 [ "$cache_xa" ] || (cp *.tzst "$GITHUB_WORKSPACE"/output && echo "OUTPUT_RELEASE=true" >> "$GITHUB_ENV")
-                [ -d staging_dir ] && cd "$OPENWRT_PATH" && sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
+                [ -d staging_dir ] && sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
             else
               echo "⚠️ 未下载到最新工具链"
               return 99
