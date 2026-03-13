@@ -214,7 +214,8 @@ jobs:
       - name: Download DL Package
         run: |
           cd $OPENWRT_PATH
-          make download -j8
+          # make download -j8
+          make package/download -j$(nproc)
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
