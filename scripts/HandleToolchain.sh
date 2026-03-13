@@ -37,6 +37,8 @@ download_toolchain() {
                 tar -I unzstd -xf *.tzst || tar -xf *.tzst
                 [ "$cache_xa" ] || (cp *.tzst "$GITHUB_WORKSPACE"/output && echo "OUTPUT_RELEASE=true" >> "$GITHUB_ENV")
                 [ -d staging_dir ] && sed -i 's/ $(tool.*\/stamp-compile)//' Makefile
+                ls -lah staging_dir
+                echo "✅ 工具链下载完成"
             else
               echo "⚠️ 未下载到最新工具链"
               return 99
