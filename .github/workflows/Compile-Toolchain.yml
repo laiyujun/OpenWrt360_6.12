@@ -121,7 +121,8 @@ jobs:
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
           # toolchain缓存文件名
           TOOLS_HASH=$(git log -1 --pretty=format:"%h" tools toolchain)
-          CACHE_NAME="$SOURCE_REPO-${REPO_BRANCH#*-}-$DEVICE_TARGET-cache-$TOOLS_HASH"
+          REPO_NAME=$(basename "$REPO_URL")
+          CACHE_NAME="$REPO_NAME-${REPO_BRANCH#*-}-$DEVICE_TARGET-$SUBTARGET_NAME-cache-$TOOLS_HASH"
           echo "CACHE_NAME=$CACHE_NAME" >> $GITHUB_ENV
   
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
