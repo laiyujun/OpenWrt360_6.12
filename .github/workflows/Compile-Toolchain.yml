@@ -135,6 +135,20 @@ jobs:
         run: |
           find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
 
+      - name: Install Feeds
+        run: |
+          cd $OPENWRT_PATH
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: Load Custom Configuration
+        run: |
+          cd $OPENWRT_PATH
+          rm -rf ./tmp* ./.config*
+          cat $GITHUB_WORKSPACE/$CONFIG_FILE $GITHUB_WORKSPACE/$GENERAL_CONFIG_FILE > .config
+          # $GITHUB_WORKSPACE/scripts/Settings.sh
+          make defconfig
+
       - name: Load Toolchain Script
         run: |
           cd $OPENWRT_PATH
