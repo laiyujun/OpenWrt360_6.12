@@ -1,8 +1,8 @@
 name: JDCloud-6.12-NoWiFi
 
 on:
-  schedule:
-    - cron: 1 17 * * 5  # 北京时间星期六凌晨0点，定时触发
+  #schedule:
+  #  - cron: 1 17 * * 5  # 北京时间星期六凌晨0点，定时触发
   workflow_call:
     inputs:
       WRT_TARGET:
@@ -24,7 +24,7 @@ on:
         description: 'Release 说明信息'
         required: false
         type: string
-        default: '这是开启全功能NSS的6.12内核固件，默认主题为Argon'
+        default: '这是开启全功能NSS的6.12内核固件无WiFi版，默认主题为Argon'
   workflow_dispatch:
     inputs:
       WRT_TARGET:
@@ -56,23 +56,23 @@ on:
       WRT_FIRMWARE_BODY:
         description: 'Release 说明信息'
         required: false
-        default: '这是开启全功能NSS的6.12内核固件，默认主题为Argon'
+        default: '这是开启全功能NSS的6.12内核固件无WiFi版，默认主题为Argon'
         type: string
 
 env:
   REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
   REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main-nss'}}
-  CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
+  CONFIG_FILE: configs/${{inputs.WRT_TARGET || 'JDCloud.NoWiFi'}}.config
   GENERAL_CONFIG_FILE: configs/General.config
-  FIRMWARE_TAG: ${{inputs.WRT_TARGET}}
-  FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY}}
+  FIRMWARE_TAG: ${{inputs.WRT_TARGET || 'JDCloud.NoWiFi'}}
+  FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY || '这是开启全功能NSS的6.12内核固件无WiFi版，默认主题为Argon'}}
   TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
   TOOLCHAIN_CACHE: true
   TOOLCHAIN_TAG: toolchain-cache
   TZ: Asia/Shanghai
 
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  WRT_TARGET: ${{inputs.WRT_TARGET}}
+  WRT_TARGET: ${{inputs.WRT_TARGET || 'JDCloud.NoWiFi'}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
 
 jobs:
