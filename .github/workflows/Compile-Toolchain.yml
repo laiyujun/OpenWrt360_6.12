@@ -120,8 +120,10 @@ jobs:
           DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
           # toolchain缓存文件名
+          CACHE_NAME_PREFIX="$SOURCE_REPO-${REPO_BRANCH#*-}-$DEVICE_TARGET-$DEVICE_SUBTARGET-cache"
+          echo "CACHE_NAME_PREFIX=$CACHE_NAME_PREFIX" >> $GITHUB_ENV
           TOOLS_HASH=$(git log -1 --pretty=format:"%h" tools toolchain)
-          CACHE_NAME="$SOURCE_REPO-${REPO_BRANCH#*-}-$DEVICE_TARGET-$DEVICE_SUBTARGET-cache-$TOOLS_HASH"
+          CACHE_NAME="$CACHE_NAME_PREFIX-$TOOLS_HASH"
           echo "CACHE_NAME=$CACHE_NAME" >> $GITHUB_ENV
   
           export WRT_DATE=$(TZ=UTC-8 date +"%y.%m.%d_%H.%M.%S")
@@ -168,7 +170,7 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           tag: ${{env.TOOLCHAIN_TAG}}
           assets: |
-            ${{env.SOURCE_REPO}}-${{env.REPO_BRANCH#*-}}-${{env.DEVICE_TARGET}}-${{env.DEVICE_SUBTARGET}}-cache-*
+            ${{env.$CACHE_NAME_PREFIX}}-*
           fail-if-no-assets: false
           fail-if-no-release: false
 
