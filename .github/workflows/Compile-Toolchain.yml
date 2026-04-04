@@ -170,7 +170,7 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           tag: ${{env.TOOLCHAIN_TAG}}
           assets: |
-            ${{env.$CACHE_NAME_PREFIX}}-*
+            ${{env.CACHE_NAME_PREFIX}}-*
           fail-if-no-assets: false
           fail-if-no-release: false
 
