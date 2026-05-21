@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
+        description: '编译平台. [ JDCloud, IPQ50XX, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
         required: true
         type: string
         default: 'IPQ60XX'
@@ -30,7 +30,7 @@ on:
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'JDCloud', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
+        options: [ 'JDCloud', 'IPQ50XX', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
