@@ -255,8 +255,8 @@ jobs:
           for FILE in $(find ./ -type f -iname "*$WRT_TARGET*") ; do
             EXT=$(basename $FILE | cut -d '.' -f 2-)
             FULL_NAME=$(basename $FILE | cut -d '.' -f 1)
-            PREFIX_NAME=echo $(basename $FILE | cut -d '.' -f 1 | grep -io ".*\($WRT_TARGET\)" | cut -d '-' -f -2)
-            SUFFIX_NAME=echo $(basename $FILE | cut -d '.' -f 1 | grep -io "\($WRT_TARGET\).*")
+            PREFIX_NAME=$(basename $FILE | cut -d '.' -f 1 | grep -io ".*\($WRT_TARGET\)" | cut -d '-' -f -2)
+            SUFFIX_NAME=$(basename $FILE | cut -d '.' -f 1 | grep -io "\($WRT_TARGET\).*")
             NEW_FILE="$PREFIX_NAME"-"R$FILE_DATE"-"$SUFFIX_NAME"."$EXT"
             mv -f $FILE ./upload/$NEW_FILE
           done
