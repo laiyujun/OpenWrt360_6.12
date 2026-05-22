@@ -243,10 +243,19 @@ jobs:
           cd $OPENWRT_PATH/bin/targets/*/*
           cat config.buildinfo
           cat sha256sums
-          cp $OPENWRT_PATH/.config build.config
+          mkdir ./upload
+          cp $OPENWRT_PATH/.config ./upload/build.config
           mv -f $OPENWRT_PATH/bin/packages/*/*/*.*pk packages
-          tar -zcf Packages.tar.gz packages
+          tar -zcf ./upload/Packages.tar.gz packages
           rm -rf packages feeds.buildinfo version.buildinfo
+          for FILE in $(find ./bin/targets/ -type f -iname "*$WRT_TARGET*") ; do
+            EXT=$(basename $FILE | cut -d '.' -f 2-)
+            FULL_NAME=$(basename $FILE | cut -d '.' -f 1)
+            PREFIX_NAME=echo $(basename $FILE | cut -d '.' -f 1 | grep -io ".*\($WRT_TARGET\)" | cut -d '-' -f -2)
+            SUFFIX_NAME=echo $(basename $FILE | cut -d '.' -f 1 | grep -io "\($WRT_TARGET\).*")
+            NEW_FILE="$PREFIX_NAME"-"R$FILE_DATE"-"$SUFFIX_NAME"."$EXT"
+            mv -f $FILE ./upload/$NEW_FILE
+          done
           echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
 
       - name: Upload Firmware To Release
@@ -259,7 +268,7 @@ jobs:
           makeLatest: true
           tag: ${{ env.FIRMWARE_TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: ${{ env.FIRMWARE_PATH }}/*
+          artifacts: ${{ env.FIRMWARE_PATH }}/upload/*
           body: |
             **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
             ### 📒 固件信息
