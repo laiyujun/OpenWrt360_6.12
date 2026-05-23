@@ -255,6 +255,9 @@ jobs:
             NEW_FILE="$PREFIX_NAME"-"R$FILE_DATE"-"$SUFFIX_NAME"."$EXT"
             mv -f $FILE ./$NEW_FILE
           done
+          echo "==============================="
+          ls $OPENWRT_PATH/bin/targets/*/*
+          echo "==============================="
           echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
 
       - name: Upload Firmware To Release
