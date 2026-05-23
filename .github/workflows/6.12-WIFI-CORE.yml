@@ -136,6 +136,7 @@ jobs:
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
           DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+          
           # toolchain缓存文件名
           CACHE_NAME_PREFIX="$SOURCE_REPO-${REPO_BRANCH#*-}-$DEVICE_TARGET-$DEVICE_SUBTARGET-cache"
           echo "CACHE_NAME_PREFIX=$CACHE_NAME_PREFIX" >> $GITHUB_ENV

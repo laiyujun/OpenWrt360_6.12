@@ -23,7 +23,7 @@ jobs:
       WRT_TARGET: 'JDCloud'
 
   JDCloud-6_12-Libwrt-NoWiFi:
-    uses: ./.github/workflows/JDCloud-NoWiFi.yml
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'JDCloud.NoWiFi'
 
