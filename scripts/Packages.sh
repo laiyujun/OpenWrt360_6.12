@@ -70,7 +70,7 @@ UPDATE_PACKAGE "luci-app-onliner" "xuanranran/openwrt-package" "master" "pkg"
 UPDATE_PACKAGE "luci-app-accesscontrol" "aige168/luci-app-accesscontrol" "main"
 
 #luci-app-cupsd
-UPDATE_PACKAGE "luci-app-cupsd" "sirpdboy/luci-app-cupsd" "main"
+#UPDATE_PACKAGE "luci-app-cupsd" "sirpdboy/luci-app-cupsd" "main"
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
