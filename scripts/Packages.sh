@@ -47,7 +47,8 @@ UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 
 UPDATE_PACKAGE "luci-app-gecoosac" "openwrt-fork/openwrt-gecoosac" "main"
 
-UPDATE_PACKAGE "luci-app-adguardhome" "xiaoxiao29/luci-app-adguardhome" "master"
+#UPDATE_PACKAGE "luci-app-adguardhome" "xiaoxiao29/luci-app-adguardhome" "master"
+UPDATE_PACKAGE "luci-app-adguardhome" "kenzok78/luci-app-adguardhome" "main"
 UPDATE_PACKAGE "easymesh" "kenzok8/openwrt-packages" "master" "pkg"
 #linkease app
 #UPDATE_PACKAGE "ddnsto" "linkease/nas-packages" "master" "pkg"
