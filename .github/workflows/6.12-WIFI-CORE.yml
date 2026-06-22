@@ -36,7 +36,7 @@ on:
         required: true
         default: 'LiBwrt-op/openwrt-6.x'
         type: choice
-        options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'King-Of-Knights/openwrt-6.x', 'LiBwrt-op/openwrt-6.x' ]
+        options: [ 'LiBwrt-op/openwrt-6.x', 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'coolsnowwolf/lede' ]
       WRT_BRANCH:
         default: 'main-nss'
         required: true
