@@ -51,6 +51,10 @@ on:
         description: '添加编译包全名 luci-app-xxx'
         required: false
         type: string
+      WRT_CONFIG:
+        description: '添加完整编译配置项'
+        required: false
+        type: string
       WRT_FIRMWARE_BODY:
         description: 'Release 说明信息'
         required: false
@@ -72,6 +76,7 @@ env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   WRT_TARGET: ${{inputs.WRT_TARGET}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
+  WRT_CONFIG: ${{inputs.WRT_CONFIG}}
 
 jobs:
   Build:
