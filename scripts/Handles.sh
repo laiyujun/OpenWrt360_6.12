@@ -48,19 +48,19 @@ if [ -d *"openclash"* ]; then
 	cd $PKG_PATCH && echo "openclash date has been updated!"
 fi
 
-if [ -d *"adguardhome"* ]; then
-  CORE_TYPE=$(echo $WRT_TARGET | grep -Eiq "64|86" && echo "amd64" || echo "arm64")
-  AGH_CORE="https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_$CORE_TYPE.tar.gz"
-
-  [ -d luci-app-adguardhome/files/usr/bin/AdGuardHome ] || mkdir -p luci-app-adguardhome/files/usr/bin/AdGuardHome
-  cd luci-app-adguardhome/files/usr/bin/AdGuardHome || exit
-
-  wget -qO- $AGH_CORE | tar xOz > ./AdGuardHome && echo "adguardhome done!"
-
-  chmod +x ./* && rm -rf ./*.gz
-
-  cd $PKG_PATCH && echo "adguardhome date has been updated!"
-fi
+#if [ -d *"adguardhome"* ]; then
+#  CORE_TYPE=$(echo $WRT_TARGET | grep -Eiq "64|86" && echo "amd64" || echo "arm64")
+#  AGH_CORE="https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_$CORE_TYPE.tar.gz"
+#
+#  [ -d luci-app-adguardhome/files/usr/bin/AdGuardHome ] || mkdir -p luci-app-adguardhome/files/usr/bin/AdGuardHome
+#  cd luci-app-adguardhome/files/usr/bin/AdGuardHome || exit
+#
+#  wget -qO- $AGH_CORE | tar xOz > ./AdGuardHome && echo "adguardhome done!"
+#
+#  chmod +x ./* && rm -rf ./*.gz
+#
+#  cd $PKG_PATCH && echo "adguardhome date has been updated!"
+#fi
 
 #移除Shadowsocks组件
 PW_FILE=$(find ./ -maxdepth 3 -type f -wholename "*/luci-app-passwall/Makefile")
