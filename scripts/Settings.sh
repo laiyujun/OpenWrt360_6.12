@@ -36,20 +36,7 @@ fi
 #手动调整的配置项
 if [ -n "$WRT_CONFIG" ]; then
   echo "手动调整的配置项$WRT_CONFIG".
-
-  # 保存原始IFS
-  OLD_IFS=$IFS
-  # 设置IFS为空格
-  IFS=' '
-
-  # 使用read读取每个配置
-  while read -r config; do
-    echo "添加配置项$config".
-    echo "$config" >> ./.config
-  done <<< "$WRT_CONFIG"
-
-  # 恢复原始IFS
-  IFS=$OLD_IFS
+  echo $WRT_CONFIG | tr ' ' '\n' | while read line; do echo "添加配置项$line"; echo "$line" >> ./.config; done
 fi
 
 echo "init settings end."
