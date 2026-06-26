@@ -18,6 +18,14 @@ on:
         required: false
         type: string
         default: 'main-nss'
+      WRT_PACKAGE:
+        description: '添加编译包全名 luci-app-xxx 多个用空格分开'
+        required: false
+        type: string
+      WRT_CONFIG:
+        description: '添加完整编译配置项，多个用空格分开'
+        required: false
+        type: string
       WRT_FIRMWARE_BODY:
         description: 'Release 说明信息'
         required: false
