@@ -68,7 +68,6 @@ env:
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   FIRMWARE_TAG: ${{inputs.WRT_TARGET}}
-  FIRMWARE_SOURCE: ${{basename(inputs.WRT_SOURCE)}}
   FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY}}
   TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
   TOOLCHAIN_CACHE: true
@@ -76,6 +75,7 @@ env:
   TZ: Asia/Shanghai
 
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  WRT_SOURCE: ${{inputs.WRT_SOURCE}}
   WRT_TARGET: ${{inputs.WRT_TARGET}}
   WRT_PACKAGE: ${{inputs.WRT_PACKAGE}}
   WRT_CONFIG: ${{inputs.WRT_CONFIG}}
@@ -156,6 +156,7 @@ jobs:
 
           echo "WRT_DATE=$WRT_DATE" >> $GITHUB_ENV
           echo "WRT_CI=$WRT_CI" >> $GITHUB_ENV
+          echo "FIRMWARE_SOURCE=$(basename $WRT_SOURCE)" >> $GITHUB_ENV
 
       - name: Check Scripts
         run: |
