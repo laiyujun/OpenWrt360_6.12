@@ -4,17 +4,17 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ50XX, IPQ60XX, IPQ807X, RAX3000M, x86-64 ]'
+        description: '编译平台. [ JDCloud, IPQ50XX, IPQ60XX, IPQ807X, x86-64 ]'
         required: true
         type: string
         default: 'IPQ60XX'
       WRT_SOURCE:
-        description: '源码仓库名. [ LiBwrt-op/openwrt-6.x, laipeng668/openwrt-6.x, laipeng668/immortalwrt, immortalwrt/immortalwrt ]'
+        description: '源码仓库名. [ LiBwrt/LibWrt, VIKINGYFY/immortalwrt, immortalwrt/immortalwrt ]'
         required: false
         type: string
-        default: 'LiBwrt-op/openwrt-6.x'
+        default: 'LiBwrt/LibWrt'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, main-nss, openwrt-23.05 ]'
+        description: '源码分支名. [ master, main, main-nss, openwrt-24.10, openwrt-25.12 ]'
         required: false
         type: string
         default: 'main-nss'
@@ -30,13 +30,13 @@ on:
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'JDCloud', 'IPQ50XX', 'IPQ60XX', 'IPQ807X', 'RAX3000M', 'x86-64' ]
+        options: [ 'JDCloud', 'IPQ50XX', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
-        default: 'LiBwrt-op/openwrt-6.x'
+        default: 'LiBwrt/LibWrt'
         type: choice
-        options: [ 'LiBwrt-op/openwrt-6.x', 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'coolsnowwolf/lede' ]
+        options: [ 'LiBwrt/LibWrt', 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt' ]
       WRT_BRANCH:
         default: 'main-nss'
         required: true
@@ -46,7 +46,8 @@ on:
           - master
           - main
           - main-nss
-          - openwrt-23.05
+          - openwrt-24.10
+          - openwrt-25.12
       WRT_PACKAGE:
         description: '添加编译包全名 luci-app-xxx'
         required: false
@@ -62,11 +63,12 @@ on:
         type: string
 
 env:
-  REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
+  REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt/LibWrt'}}.git
   REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   FIRMWARE_TAG: ${{inputs.WRT_TARGET}}
+  FIRMWARE_SOURCE: ${{basename(inputs.WRT_SOURCE)}}
   FIRMWARE_BODY: ${{inputs.WRT_FIRMWARE_BODY}}
   TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
   TOOLCHAIN_CACHE: true
@@ -279,18 +281,18 @@ jobs:
         if: steps.compile.outputs.status == 'success'
         uses: ncipollo/release-action@main
         with:
-          name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }}
+          name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }}
           allowUpdates: true
           removeArtifacts: true
           makeLatest: true
-          tag: ${{ env.FIRMWARE_TAG }}
+          tag: ${{ env.FIRMWARE_TAG }}-${{ env.FIRMWARE_SOURCE }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: ${{ env.FIRMWARE_PATH }}/*
           body: |
-            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
+            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} on ${{ env.DATE }}.**
             ### 📒 固件信息
             - ${{ env.FIRMWARE_BODY }}
-            - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
+            - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 ${{ env.FIRMWARE_SOURCE }} OpenWrt 固件
             - ⚽ 固件源码: ${{ env.REPO_URL }}
             - 💝 源码分支: ${{ env.REPO_BRANCH }}
             - 🌐 默认地址: **192.168.10.1**

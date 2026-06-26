@@ -29,12 +29,12 @@ jobs:
       WRT_SOURCE: 'immortalwrt/immortalwrt'
       WRT_BRANCH: 'master'
 
-  RAX3000M-6_12-Immortalwrt:
-    uses: ./.github/workflows/Compile-Toolchain.yml
-    with:
-      WRT_TARGET: 'RAX3000M'
-      WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'master'
+  #RAX3000M-6_12-Immortalwrt:
+  #  uses: ./.github/workflows/Compile-Toolchain.yml
+  #  with:
+  #    WRT_TARGET: 'RAX3000M'
+  #    WRT_SOURCE: 'immortalwrt/immortalwrt'
+  #    WRT_BRANCH: 'master'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml

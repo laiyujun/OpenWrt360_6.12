@@ -21,11 +21,33 @@ jobs:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'JDCloud'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+
+  JDCloud-6_12-immortalwrt:
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'JDCloud'
+      WRT_SOURCE: 'immortalwrt/immortalwrt'
+      WRT_BRANCH: 'openwrt-24.10'
+      WRT_PACKAGE: 'luci-app-store luci-app-istorex'
+      WRT_CONFIG: 'CONFIG_USE_APK=n'
+      WRT_FIRMWARE_BODY: '这是基于immortal源码24.10分支添加iStore编译的有WiFi固件，默认主题为Argon'
 
   JDCloud-6_12-Libwrt-NoWiFi:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'JDCloud.NoWiFi'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+
+  JDCloud-6_12-immortalwrt-NoWiFi:
+    uses: ./.github/workflows/6.12-WIFI-CORE.yml
+    with:
+      WRT_TARGET: 'JDCloud.NoWiFi'
+      WRT_SOURCE: 'immortalwrt/immortalwrt'
+      WRT_BRANCH: 'openwrt-24.10'
+      WRT_PACKAGE: 'luci-app-store luci-app-istorex'
+      WRT_CONFIG: 'CONFIG_USE_APK=n'
+      WRT_FIRMWARE_BODY: '这是基于immortal源码24.10分支添加iStore编译的无WiFi固件，默认主题为Argon'
 
   x86-64-6_12-Immortalwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
@@ -33,16 +55,16 @@ jobs:
       WRT_TARGET: 'x86-64'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
       WRT_BRANCH: 'master'
-      WRT_FIRMWARE_BODY: '这是基于ImmortalWrt主线制作的个人定制固件，默认主题为Argon'
+      WRT_FIRMWARE_BODY: '这是基于ImmortalWrt主线制作的x86-64个人定制固件，默认主题为Argon'
 
-  RAX3000M-6_12-Immortalwrt:
-    uses: ./.github/workflows/6.12-WIFI-CORE.yml
-    with:
-      WRT_TARGET: 'RAX3000M'
-      WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'master'
-      WRT_FIRMWARE_BODY: '这是CMCC RAX3000M 基于ImmortalWrt主线制作的个人定制固件，默认主题为Argon'
-      # WRT_FIRMWARE_BODY: '这是CMCC RAX3000M NAND version (custom U-Boot layout)的5.15内核固件，默认主题为Argon'
+  #RAX3000M-6_12-Immortalwrt:
+  #  uses: ./.github/workflows/6.12-WIFI-CORE.yml
+  #  with:
+  #    WRT_TARGET: 'RAX3000M'
+  #    WRT_SOURCE: 'immortalwrt/immortalwrt'
+  #    WRT_BRANCH: 'master'
+  #    WRT_FIRMWARE_BODY: '这是CMCC RAX3000M 基于ImmortalWrt主线制作的个人定制固件，默认主题为Argon'
+  #    # WRT_FIRMWARE_BODY: '这是CMCC RAX3000M NAND version (custom U-Boot layout)的5.15内核固件，默认主题为Argon'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml

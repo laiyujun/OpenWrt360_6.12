@@ -30,13 +30,13 @@ sed -i 's/opp-microvolt = <937500>;/opp-microvolt = <950000>;/' target/linux/qua
 #手动调整的插件
 if [ -n "$WRT_PACKAGE" ]; then
   echo "手动调整的插件$WRT_PACKAGE".
-	echo "CONFIG_PACKAGE_$WRT_PACKAGE=y" >> ./.config
+	echo $WRT_PACKAGE | tr ' ' '\n' | while read line; do echo "添加插件 $line"; echo "CONFIG_PACKAGE_$line=y" >> ./.config; done
 fi
 
 #手动调整的配置项
 if [ -n "$WRT_CONFIG" ]; then
   echo "手动调整的配置项$WRT_CONFIG".
-  echo $WRT_CONFIG | tr ' ' '\n' | while read line; do echo "添加配置项$line"; echo "$line" >> ./.config; done
+  echo $WRT_CONFIG | tr ' ' '\n' | while read line; do echo "添加配置项 $line"; echo "$line" >> ./.config; done
 fi
 
 echo "init settings end."
