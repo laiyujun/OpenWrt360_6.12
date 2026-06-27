@@ -28,7 +28,7 @@ jobs:
     with:
       WRT_TARGET: 'JDCloud'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'openwrt-24.10'
+      WRT_BRANCH: 'master'
       WRT_PACKAGE: 'luci-app-store luci-app-istorex'
       WRT_CONFIG: 'CONFIG_USE_APK=n'
       WRT_FIRMWARE_BODY: '这是基于immortal源码24.10分支添加iStore编译的有WiFi固件，默认主题为Argon'
@@ -44,7 +44,7 @@ jobs:
     with:
       WRT_TARGET: 'JDCloud.NoWiFi'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
-      WRT_BRANCH: 'openwrt-24.10'
+      WRT_BRANCH: 'master'
       WRT_PACKAGE: 'luci-app-store luci-app-istorex'
       WRT_CONFIG: 'CONFIG_USE_APK=n'
       WRT_FIRMWARE_BODY: '这是基于immortal源码24.10分支添加iStore编译的无WiFi固件，默认主题为Argon'
