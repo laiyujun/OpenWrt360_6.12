@@ -91,5 +91,6 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky luci-app-lucky
 git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led luci-app-athena-led
 chmod +x ./luci-app-athena-led/root/etc/init.d/athena_led ./luci-app-athena-led/root/usr/sbin/athena-led
 
+cd "$OPENWRT_PATH" || cd .. || exit
 ./scripts/feeds update -a
 ./scripts/feeds install -a
