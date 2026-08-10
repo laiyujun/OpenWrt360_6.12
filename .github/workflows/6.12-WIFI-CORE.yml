@@ -14,10 +14,10 @@ on:
         type: string
         default: 'LiBwrt/LibWrt'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, main-nss, openwrt-24.10, openwrt-25.12 ]'
+        description: '源码分支名. [ master, main, main-nss, 25.12-nss, openwrt-24.10, openwrt-25.12 ]'
         required: false
         type: string
-        default: 'main-nss'
+        default: '25.12-nss'
       WRT_PACKAGE:
         description: '添加编译包全名 luci-app-xxx 多个用空格分开'
         required: false
@@ -46,7 +46,7 @@ on:
         type: choice
         options: [ 'LiBwrt/LibWrt', 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt' ]
       WRT_BRANCH:
-        default: 'main-nss'
+        default: '25.12-nss'
         required: true
         description: 'branch name'
         type: choice
@@ -54,6 +54,7 @@ on:
           - master
           - main
           - main-nss
+          - 25.12-nss
           - openwrt-24.10
           - openwrt-25.12
       WRT_PACKAGE:
@@ -72,7 +73,7 @@ on:
 
 env:
   REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt/LibWrt'}}.git
-  REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main-nss'}}
+  REPO_BRANCH: ${{inputs.WRT_BRANCH || '25.12-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   FIRMWARE_TAG: ${{inputs.WRT_TARGET}}

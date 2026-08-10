@@ -11,17 +11,22 @@ jobs:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'IPQ60XX'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   IPQ807X-6_12-Libwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'IPQ807X'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   JDCloud-6_12-Libwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
     with:
       WRT_TARGET: 'JDCloud'
       WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   JDCloud-6_12-immortalwrt:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
@@ -38,6 +43,7 @@ jobs:
     with:
       WRT_TARGET: 'JDCloud.NoWiFi'
       WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   JDCloud-6_12-immortalwrt-NoWiFi:
     uses: ./.github/workflows/6.12-WIFI-CORE.yml
