@@ -27,7 +27,7 @@ sed -i "/attendedsysupgrade/d" $(find ./feeds/luci/collections/ -type f -name "M
 #手动调整的插件
 if [ -n "$WRT_PACKAGE" ]; then
   echo "手动调整的插件$WRT_PACKAGE".
-	echo $WRT_PACKAGE | tr ' ' '\n' | while read line; do echo "添加插件 $line"; echo "CONFIG_PACKAGE_$line=y" >> ./.config; done
+	echo $WRT_PACKAGE | tr ' ' '\n' | while read line; do echo "处理插件 $line"; echo "CONFIG_PACKAGE_$line" >> ./.config; done
 fi
 
 #手动调整的配置项

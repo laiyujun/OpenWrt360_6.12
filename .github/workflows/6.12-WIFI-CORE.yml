@@ -19,7 +19,7 @@ on:
         type: string
         default: '25.12-nss'
       WRT_PACKAGE:
-        description: '添加编译包全名 luci-app-xxx 多个用空格分开'
+        description: '添加编译包全名 luci-app-xxx=y 多个用空格分开'
         required: false
         type: string
       WRT_CONFIG:
@@ -58,7 +58,7 @@ on:
           - openwrt-24.10
           - openwrt-25.12
       WRT_PACKAGE:
-        description: '添加编译包全名 luci-app-xxx'
+        description: '添加编译包全名 luci-app-xxx=y'
         required: false
         type: string
       WRT_CONFIG:
