@@ -41,7 +41,7 @@ jobs:
       WRT_TARGET: 'JDCloud'
       WRT_SOURCE: 'immortalwrt/immortalwrt'
       WRT_BRANCH: 'master'
-      WRT_PACKAGE: 'luci-app-oaf=n'
+      WRT_PACKAGE: 'luci-app-oaf=n luci-app-easymesh=n'
       WRT_FIRMWARE_BODY: '这是基于immortal源码24.10分支添加iStore编译的有WiFi固件，默认主题为Argon'
 
   JDCloud-6_12-immortalwrt-NoWiFi:
