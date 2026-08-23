@@ -237,6 +237,7 @@ jobs:
 
       - name: Fix Rust CI LLVM 404
         run: |
+          cd $OPENWRT_PATH
           RUST_FILE=$(find ./feeds/packages/ -maxdepth 3 -type f -path "*/lang/rust/Makefile")
           if [ -f "$RUST_FILE" ]; then
             sed -i 's/ci-llvm=true/ci-llvm=false/g' "$RUST_FILE"
