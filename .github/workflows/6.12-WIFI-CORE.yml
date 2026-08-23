@@ -241,9 +241,9 @@ jobs:
           RUST_FILE="feeds/packages/lang/rust/Makefile"
           if [ -f "$RUST_FILE" ]; then
             # 这行命令会查找 RUST_BOOTSTRAP_ARGS 行，并在行尾加上我们的参数
-            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set llvm.download-ci-llvm=false|' "$FILE"
+            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set llvm.download-ci-llvm=false|' "$RUST_FILE"
             echo "Modified Rust Makefile:"
-            grep "download-ci-llvm" "$FILE"
+            grep "download-ci-llvm" "$RUST_FILE"
           else
             echo "Not Found Rust Makefile"
           fi
