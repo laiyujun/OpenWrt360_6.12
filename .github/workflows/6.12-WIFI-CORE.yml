@@ -290,7 +290,7 @@ jobs:
         if: steps.compile.outputs.status == 'success'
         uses: ncipollo/release-action@main
         with:
-          name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }}
+          name: ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} at ${{ env.DATE }}
           allowUpdates: true
           removeArtifacts: true
           makeLatest: true
@@ -298,7 +298,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: ${{ env.FIRMWARE_PATH }}/*
           body: |
-            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} on ${{ env.DATE }}.**
+            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} at ${{ env.DATE }}.**
             ### 📒 固件信息
             - ${{ env.FIRMWARE_BODY }}
             - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 ${{ env.FIRMWARE_SOURCE }} OpenWrt 固件
