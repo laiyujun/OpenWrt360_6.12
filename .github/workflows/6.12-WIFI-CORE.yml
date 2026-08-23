@@ -252,6 +252,14 @@ jobs:
             grep "download-ci-llvm" "$RUST_FILE"
           fi
 
+      - name: Cache Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            $OPENWRT_PATH/build_dir/target-*/host/rustc-*
+            $OPENWRT_PATH/dl/cargo
+          key: rust-1.94.0-${{ runner.os }}-${{ hashFiles('feeds/packages/lang/rust/Makefile') }}
+
       - name: Compile Firmware
         id: compile
         run: |
