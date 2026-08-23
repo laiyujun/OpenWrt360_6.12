@@ -235,6 +235,13 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Fix Rust CI LLVM 404
+        run: |
+          RUST_FILE=$(find ./feeds/packages/ -maxdepth 3 -type f -path "*/lang/rust/Makefile")
+          if [ -f "$RUST_FILE" ]; then
+            sed -i 's/ci-llvm=true/ci-llvm=false/g' "$RUST_FILE"
+          fi
+
       - name: Compile Firmware
         id: compile
         run: |
