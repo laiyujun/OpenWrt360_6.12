@@ -239,13 +239,17 @@ jobs:
         working-directory: $OPENWRT_PATH
         run: |
           RUST_FILE="feeds/packages/lang/rust/Makefile"
-          if [ -f "$RUST_FILE" ]; then
-            # 这行命令会查找 RUST_BOOTSTRAP_ARGS 行，并在行尾加上我们的参数
-            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set llvm.download-ci-llvm=false|' "$RUST_FILE"
-            echo "Modified Rust Makefile:"
-            grep "download-ci-llvm" "$RUST_FILE"
+          if [ ! -f "$RUST_FILE" ]; then
+            echo "❌ Rust Makefile not found!"
+            exit 1
+          fi
+      
+          if grep -q "download-ci-llvm=false" "$RUST_FILE"; then
+            echo "ℹ️ download-ci-llvm already disabled, skipping."
           else
-            echo "Not Found Rust Makefile"
+            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set llvm.download-ci-llvm=false|' "$RUST_FILE"
+            echo "✅ Patched Rust Makefile:"
+            grep "download-ci-llvm" "$RUST_FILE"
           fi
 
       - name: Compile Firmware
