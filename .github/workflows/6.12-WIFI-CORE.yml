@@ -236,11 +236,16 @@ jobs:
           find dl -size -1024c -exec rm -f {} \;
 
       - name: Fix Rust CI LLVM 404
+        working-directory: $OPENWRT_PATH
         run: |
-          cd $OPENWRT_PATH
-          RUST_FILE=$(find ./feeds/packages/ -maxdepth 3 -type f -path "*/lang/rust/Makefile")
+          RUST_FILE="feeds/packages/lang/rust/Makefile"
           if [ -f "$RUST_FILE" ]; then
-            sed -i 's/ci-llvm=true/ci-llvm=false/g' "$RUST_FILE"
+            # 这行命令会查找 RUST_BOOTSTRAP_ARGS 行，并在行尾加上我们的参数
+            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set llvm.download-ci-llvm=false|' "$FILE"
+            echo "Modified Rust Makefile:"
+            grep "download-ci-llvm" "$FILE"
+          else
+            echo "Not Found Rust Makefile"
           fi
 
       - name: Compile Firmware
