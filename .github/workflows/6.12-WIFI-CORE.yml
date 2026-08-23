@@ -236,8 +236,8 @@ jobs:
           find dl -size -1024c -exec rm -f {} \;
 
       - name: Fix Rust CI LLVM 404
-        working-directory: $OPENWRT_PATH
         run: |
+          cd $OPENWRT_PATH
           RUST_FILE="feeds/packages/lang/rust/Makefile"
           if [ ! -f "$RUST_FILE" ]; then
             echo "❌ Rust Makefile not found!"
