@@ -235,6 +235,29 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Fix Rust CI LLVM 404
+        run: |
+          cd $OPENWRT_PATH
+          RUST_FILE="feeds/packages/lang/rust/Makefile"
+          if [ ! -f "$RUST_FILE" ]; then
+            echo "❌ Rust Makefile not found!"
+            exit 1
+          fi
+          
+          echo "📄 Original:"
+          grep -n "download-ci-llvm" "$RUST_FILE" || true
+          
+          # 替换 --set=llvm.download-ci-llvm=true 为 --set=llvm.download-ci-llvm=false
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/g' "$RUST_FILE"
+          
+          # 如果仍然没有 false，再追加（兜底）
+          if ! grep -q "download-ci-llvm=false" "$RUST_FILE"; then
+            sed -i '/^RUST_BOOTSTRAP_ARGS +=/ s|$| --set=llvm.download-ci-llvm=false|' "$RUST_FILE"
+          fi
+          
+          echo "✅ Patched:"
+          grep -n "download-ci-llvm" "$RUST_FILE" || true
+
       - name: Compile Firmware
         id: compile
         run: |
@@ -290,7 +313,7 @@ jobs:
         if: steps.compile.outputs.status == 'success'
         uses: ncipollo/release-action@main
         with:
-          name: R${{ env.DATE }} for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }}
+          name: ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} at ${{ env.DATE }}
           allowUpdates: true
           removeArtifacts: true
           makeLatest: true
@@ -298,7 +321,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: ${{ env.FIRMWARE_PATH }}/*
           body: |
-            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} on ${{ env.DATE }}.**
+            **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }} with ${{ env.FIRMWARE_SOURCE }} at ${{ env.DATE }}.**
             ### 📒 固件信息
             - ${{ env.FIRMWARE_BODY }}
             - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 ${{ env.FIRMWARE_SOURCE }} OpenWrt 固件
