@@ -200,7 +200,7 @@ jobs:
           cd $OPENWRT_PATH
           # 临时打补丁修复x86的Docker编译错误
           mkdir -p ./feeds/packages/utils/dockerd/patches
-          wget -O ./feeds/packages/utils/dockerd/patches/001-skip-copy-nested-binaries.patch https://raw.githubusercontent.com/AndyChiang888/packages/refs/heads/dockerd/utils/dockerd/patches/001-skip-copy-nested-binaries.patch
+          wget -O ./feeds/packages/utils/dockerd/patches/001-skip-copy-nested-binaries.patch https://github.com/openwrt/packages/blob/fe37485e1fb0b4b09a954174509ce782459590a2/utils/dockerd/patches/001-skip-copy-nested-binaries.patch
 
 
       - name: Load Toolchain Script
