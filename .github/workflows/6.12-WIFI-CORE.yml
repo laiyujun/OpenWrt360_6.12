@@ -194,15 +194,6 @@ jobs:
           $GITHUB_WORKSPACE/scripts/Settings.sh
           make defconfig
 
-      - name: Patch Docker For x86_64
-        if: env.WRT_TARGET == 'x86-64'
-        run: |
-          cd $OPENWRT_PATH
-          # 临时打补丁修复x86的Docker编译错误
-          mkdir -p ./feeds/packages/utils/dockerd/patches
-          wget -O ./feeds/packages/utils/dockerd/patches/001-skip-copy-nested-binaries.patch https://github.com/openwrt/packages/blob/fe37485e1fb0b4b09a954174509ce782459590a2/utils/dockerd/patches/001-skip-copy-nested-binaries.patch
-
-
       - name: Load Toolchain Script
         run: |
           cd $OPENWRT_PATH
