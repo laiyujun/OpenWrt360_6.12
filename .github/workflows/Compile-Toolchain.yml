@@ -14,10 +14,10 @@ on:
         type: string
         default: 'LiBwrt-op/openwrt-6.x'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, main-nss, openwrt-23.05 ]'
+        description: '源码分支名. [ master, main, 25.12-nss, openwrt-23.05 ]'
         required: false
         type: string
-        default: 'main-nss'
+        default: '25.12-nss'
   workflow_dispatch:
     inputs:
       WRT_TARGET:
@@ -33,19 +33,19 @@ on:
         type: choice
         options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'King-Of-Knights/openwrt-6.x', 'LiBwrt-op/openwrt-6.x' ]
       WRT_BRANCH:
-        default: 'main-nss'
+        default: '25.12-nss'
         required: true
         description: 'branch name'
         type: choice
         options:
           - master
           - main
-          - main-nss
+          - 25.12-nss
           - openwrt-23.05
 
 env:
   REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
-  REPO_BRANCH: ${{inputs.WRT_BRANCH || 'main-nss'}}
+  REPO_BRANCH: ${{inputs.WRT_BRANCH || '25.12-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
   TOOLCHAIN_SCRIPT: scripts/HandleToolchain.sh
