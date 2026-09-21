@@ -7,6 +7,14 @@ on:
 
 jobs:
 
+  IPQ53XX-6_18-immortalwrt:
+    uses: ./.github/workflows/WRT-CORE.yml
+    with:
+      WRT_TARGET: 'IPQ53XX'
+      WRT_SOURCE: 'VIKINGYFY/immortalwrt'
+      WRT_BRANCH: 'owrt'
+      WRT_FIRMWARE_BODY: '这是基于immortal源码主线分支添加iStore编译的6.18内核固件，默认主题为Argon'
+
   IPQ60XX-6_12-Libwrt:
     uses: ./.github/workflows/WRT-CORE.yml
     with:
