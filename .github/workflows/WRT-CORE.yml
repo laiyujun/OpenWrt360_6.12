@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ50XX, IPQ60XX, IPQ807X, x86-64 ]'
+        description: '编译平台. [ JDCloud, IPQ50XX, IPQ53XX, IPQ60XX, IPQ807X, x86-64 ]'
         required: true
         type: string
         default: 'IPQ60XX'
@@ -14,7 +14,7 @@ on:
         type: string
         default: 'LiBwrt/LibWrt'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, main-nss, 25.12-nss, openwrt-24.10, openwrt-25.12 ]'
+        description: '源码分支名. [ master, main, main-nss, 25.12-nss, owrt, openwrt-24.10, openwrt-25.12 ]'
         required: false
         type: string
         default: '25.12-nss'
@@ -38,7 +38,7 @@ on:
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'JDCloud', 'IPQ50XX', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
+        options: [ 'JDCloud', 'IPQ50XX', 'IPQ53XX', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
@@ -55,6 +55,7 @@ on:
           - main
           - main-nss
           - 25.12-nss
+          - owrt
           - openwrt-24.10
           - openwrt-25.12
       WRT_PACKAGE:
