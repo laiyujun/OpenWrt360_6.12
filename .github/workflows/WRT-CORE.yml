@@ -1,4 +1,4 @@
-name: IPQ60XX-6.12-WIFI-CORE
+name: WRT-CORE
 
 on:
   workflow_call:
