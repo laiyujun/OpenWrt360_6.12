@@ -35,6 +35,7 @@ rm -rf feeds/luci/applications/luci-app-wechatpush
 rm -rf feeds/luci/applications/luci-app-appfilter
 rm -rf feeds/luci/applications/luci-app-frpc
 rm -rf feeds/luci/applications/luci-app-frps
+rm -rf feeds/luci/applications/luci-app-unblockneteasemusic
 rm -rf feeds/packages/open-app-filter
 rm -rf feeds/packages/net/open-app-filter
 rm -rf feeds/packages/net/adguardhome
@@ -79,6 +80,9 @@ UPDATE_PACKAGE "luci-app-oaf" "destan19/OpenAppFilter" "master"
 UPDATE_PACKAGE "luci-app-onliner" "xuanranran/openwrt-package" "master" "pkg"
 #luci-app-accesscontrol
 UPDATE_PACKAGE "luci-app-accesscontrol" "aige168/luci-app-accesscontrol" "main"
+
+#luci-app-unblockneteasemusic
+UPDATE_PACKAGE "luci-app-unblockneteasemusic" "UnblockNeteaseMusic/luci-app-unblockneteasemusic" "js"
 
 #luci-app-cupsd
 #UPDATE_PACKAGE "luci-app-cupsd" "sirpdboy/luci-app-cupsd" "main"
