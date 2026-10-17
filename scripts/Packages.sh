@@ -45,7 +45,7 @@ rm -rf feeds/packages/lang/golang
 
 #UPDATE_PACKAGE "包名" "项目地址" "项目分支" "pkg/name，可选，pkg为从大杂烩中单独提取包名插件；name为重命名为包名"
 UPDATE_PACKAGE "argon" "jerrykuku/luci-theme-argon" "master"
-UPDATE_PACKAGE "argon-config" "jerrykuku/luci-app-argon-config" "master"
+#UPDATE_PACKAGE "argon-config" "jerrykuku/luci-app-argon-config" "master"
 UPDATE_PACKAGE "aurora" "eamonxg/luci-theme-aurora" "master"
 UPDATE_PACKAGE "aurora-config" "eamonxg/luci-app-aurora-config" "master"
 
