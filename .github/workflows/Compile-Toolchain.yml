@@ -58,7 +58,7 @@ env:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: build toolchain for ${{ inputs.WRT_TARGET }}
 
     steps:

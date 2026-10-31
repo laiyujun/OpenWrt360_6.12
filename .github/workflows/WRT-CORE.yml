@@ -92,7 +92,7 @@ env:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: build firmware for ${{ inputs.WRT_TARGET }}
 
     steps:
