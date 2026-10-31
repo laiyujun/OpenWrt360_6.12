@@ -17,12 +17,14 @@ jobs:
     with:
       WRT_TARGET: 'IPQ807X'
 
-#  JDCloud-6_12-Libwrt:
-#    uses: ./.github/workflows/Compile-Toolchain.yml
-#    with:
-#      WRT_TARGET: 'JDCloud'
+  IPQ53XX-6_18-Immortalwrt:
+    uses: ./.github/workflows/Compile-Toolchain.yml
+    with:
+      WRT_TARGET: 'IPQ53XX'
+      WRT_SOURCE: 'VIKINGYFY/immortalwrt'
+      WRT_BRANCH: 'owrt'
 
-  x86-64-6_12-Immortalwrt:
+  x86-64-6_18-Immortalwrt:
     uses: ./.github/workflows/Compile-Toolchain.yml
     with:
       WRT_TARGET: 'x86-64'

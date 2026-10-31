@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ60XX, IPQ807X, x86-64 ]'
+        description: '编译平台. [ IPQ53XX, IPQ60XX, IPQ807X, x86-64 ]'
         required: true
         type: string
         default: 'IPQ60XX'
@@ -14,7 +14,7 @@ on:
         type: string
         default: 'LiBwrt-op/openwrt-6.x'
       WRT_BRANCH:
-        description: '源码分支名. [ master, main, 25.12-nss, openwrt-23.05 ]'
+        description: '源码分支名. [ master, main, main-nss, 25.12-nss, owrt, openwrt-24.10, openwrt-25.12 ]'
         required: false
         type: string
         default: '25.12-nss'
@@ -25,13 +25,13 @@ on:
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'JDCloud', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
+        options: [ 'IPQ53XX', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
         default: 'LiBwrt-op/openwrt-6.x'
         type: choice
-        options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'King-Of-Knights/openwrt-6.x', 'LiBwrt-op/openwrt-6.x' ]
+        options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'LiBwrt-op/openwrt-6.x' ]
       WRT_BRANCH:
         default: '25.12-nss'
         required: true
@@ -40,8 +40,11 @@ on:
         options:
           - master
           - main
+          - main-nss
           - 25.12-nss
-          - openwrt-23.05
+          - owrt
+          - openwrt-24.10
+          - openwrt-25.12
 
 env:
   REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
