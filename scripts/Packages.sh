@@ -98,3 +98,24 @@ chmod +x ./luci-app-athena-led/root/etc/init.d/athena_led ./luci-app-athena-led/
 cd "$OPENWRT_PATH" || cd .. || exit
 ./scripts/feeds update -a
 ./scripts/feeds install -a
+
+# ============================================================
+# 覆盖 ruby：根治 LibWrt 25.12 的 ruby 3.4.9 host 静态链接编译极慢（约 2h+）问题
+# 用 immortalwrt/packages master 的 ruby 4.0.7 替换（host 编译仅需 26-41min，已大量设备验证）
+# 关键约束：必须在最后一次 feeds install -a 之后执行，否则上方的 feeds update -a 会把替换冲掉
+# 兼容性：openclash/passwall 等仅依赖 ruby 包名（PKG_NAME:=ruby），不绑定主版本号，需实跑验证
+# 临时禁用：注释掉本段即可回退到 feed 源自带的 ruby 版本
+# ============================================================
+RUBY_FEED_DIR="feeds/packages/lang/ruby"
+if [ -d "$RUBY_FEED_DIR" ]; then
+  rm -rf "$RUBY_FEED_DIR"
+  rm -rf /tmp/immortalwrt-packages-ruby
+  git clone --depth=1 --single-branch --branch master --filter=blob:none --sparse \
+    https://github.com/immortalwrt/packages.git /tmp/immortalwrt-packages-ruby
+  ( cd /tmp/immortalwrt-packages-ruby && git sparse-checkout set lang/ruby )
+  cp -rf /tmp/immortalwrt-packages-ruby/lang/ruby "$RUBY_FEED_DIR"
+  rm -rf /tmp/immortalwrt-packages-ruby
+  echo "[ruby-override] ruby 已覆盖为 immortalwrt master (4.0.7)，原 feed 版本被替换"
+else
+  echo "[ruby-override] 未找到 $RUBY_FEED_DIR，跳过 ruby 覆盖"
+fi
