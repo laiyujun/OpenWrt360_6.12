@@ -8,25 +8,65 @@ WRT_HOSTNAME=OpenWrt
 WRT_SSID=OpenWrt
 #wifi pwd
 WRT_PWD=12345678
-#theme
+#theme可填 argon / aurora / vantage
 WRT_THEME=argon
 
 # 移除luci-app-attendedsysupgrade软件包
 find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "/attendedsysupgrade/d" {} +
-#修改默认主题
+# 修改 collections 依赖：只决定哪个主题包被编进固件，不决定开机显示哪个主题
 find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "s/luci-theme-bootstrap/luci-theme-$WRT_THEME/g" {} +
+# 修改默认主题：真正生效的是 luci.main.mediaurlbase
+THEME_CFG="./feeds/luci/modules/luci-base/root/etc/config/luci"
+if [ -f "$THEME_CFG" ]; then
+	sed -i "s|/luci-static/[a-zA-Z0-9_-]*|/luci-static/$WRT_THEME|g" "$THEME_CFG"
+	grep -m1 "mediaurlbase" "$THEME_CFG" | sed 's/^/[Settings] /'
+else
+	echo "[Settings][WARN] 未找到 $THEME_CFG，跳过 mediaurlbase 修改"
+fi
+# 去掉各主题包 uci-defaults 里对 mediaurlbase 的争抢设置
+find ./package/luci-theme-*/ ./feeds/luci/themes/luci-theme-*/ \
+	-type f -path "*uci-defaults*" -exec sed -i '/set luci.main.mediaurlbase/d' {} + 2>/dev/null
+# 用 99- 前缀的 uci-defaults 最后统一设定默认主题（首次开机执行）
+mkdir -p ./files/etc/uci-defaults
+cat > ./files/etc/uci-defaults/99-init-settings <<EOF
+#!/bin/sh
+uci set luci.main.mediaurlbase='/luci-static/$WRT_THEME'
+uci commit luci
+exit 0
+EOF
+chmod +x ./files/etc/uci-defaults/99-init-settings
+echo "[Settings][OK] 默认主题设为 $WRT_THEME (files/etc/uci-defaults/99-init-settings)"
 #修改immortalwrt.lan关联IP
 find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js" -exec sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" {} +
 #添加编译日期标识
 find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js" -exec sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ $WRT_CI-$WRT_DATE')/g" {} +
-#修改默认WIFI名
-#sed -i "s/\.ssid=.*/\.ssid=$WRT_SSID/g" $(find ./package/kernel/mac80211/ ./package/network/config/ -type f -name "mac80211.*")
-
-#修改默认WIFI名&密码
-WIFI_UC="./package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
-ROUTER_TOOL="./package/emortal/luci-app-router-tool/root/etc/config/router-tool"
-for file in "$ROUTER_TOOL" "$WIFI_UC"; do
-	[ -f "$file" ] && sed -i "s/ssid '.*'/ssid '$WRT_SSID'/g; s/key '.*'/key '$WRT_PWD'/g" "$file"
+# 修改默认WIFI名&密码
+# 6.12/25.12 源码用的是 ucode 版 mac80211.uc，格式为 set ${si}.ssid='...'
+# （不是 /etc/config/wireless 的 option ssid '...'），且必须同时设置 encryption 密码才会生效
+WIFI_FILES=$(find ./package/kernel/mac80211/ ./package/network/config/ \
+	-type f \( -name "mac80211.uc" -o -name "mac80211.sh" \) 2>/dev/null)
+if [ -z "$WIFI_FILES" ]; then
+	echo "[Settings][WARN] 未找到 mac80211.uc / mac80211.sh，WiFi 默认配置未修改"
+fi
+for file in $WIFI_FILES; do
+	[ -f "$file" ] || continue
+	if grep -qF 'set ${si}.ssid=' "$file"; then
+		sed -i \
+			-e '/^set [$]{si}\.ssid=/s|.*|set ${si}.ssid='"'$WRT_SSID'"'|' \
+			-e '/^set [$]{si}\.encryption=/s|.*|set ${si}.encryption='"'"'psk2'"'"'|' \
+			-e '/^set [$]{si}\.key=/s|.*|set ${si}.key='"'$WRT_PWD'"'|' \
+			-e '/^set [$]{si}\.disabled=/s|.*|set ${si}.disabled='"'"'0'"'"'|' \
+			"$file"
+		if grep -qF "ssid='$WRT_SSID'" "$file" && grep -qF "key='$WRT_PWD'" "$file"; then
+			echo "[Settings][OK] WiFi 默认值已生效: SSID=$WRT_SSID / psk2 / $file"
+		else
+			echo "[Settings][WARN] WiFi 默认值校验未通过: $file"
+		fi
+	else
+		# 旧 shell 版分支：仅能改 SSID，加密与密码需按该文件格式单独适配
+		sed -i "s/\.ssid=.*/\.ssid=$WRT_SSID/g" "$file"
+		echo "[Settings][WARN] 旧格式 mac80211，仅写入 SSID，加密/密码未处理: $file"
+	fi
 done
 
 CFG_FILE="./package/base-files/files/bin/config_generate"
