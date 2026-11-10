@@ -43,8 +43,10 @@ find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js" -exec se
 # 修改默认WIFI名&密码
 # 6.12/25.12 源码用的是 ucode 版 mac80211.uc，格式为 set ${si}.ssid='...'
 # （不是 /etc/config/wireless 的 option ssid '...'），且必须同时设置 encryption 密码才会生效
+# 排除 netifd/wireless/ 下的协议脚本：它们只把 UCI 配置翻译成 hostapd 参数，不定义默认 SSID
 WIFI_FILES=$(find ./package/kernel/mac80211/ ./package/network/config/ \
-	-type f \( -name "mac80211.uc" -o -name "mac80211.sh" \) 2>/dev/null)
+	-type f \( -name "mac80211.uc" -o -name "mac80211.sh" \) \
+	! -path "*/netifd/*" 2>/dev/null)
 if [ -z "$WIFI_FILES" ]; then
 	echo "[Settings][WARN] 未找到 mac80211.uc / mac80211.sh，WiFi 默认配置未修改"
 fi
@@ -62,10 +64,21 @@ for file in $WIFI_FILES; do
 		else
 			echo "[Settings][WARN] WiFi 默认值校验未通过: $file"
 		fi
+	elif grep -qE 'set wireless\.default_.*\.ssid=' "$file"; then
+		# 旧格式（23.05 及更早）：UCI 批处理模板，需同时写 SSID / 加密 / 密码 / 启用
+		sed -i \
+			-e "s/\.ssid=.*/\.ssid=$WRT_SSID/g" \
+			-e "s|\(set wireless\.default_[^ ]*\.encryption=\).*|\1psk2\nset wireless.default_\${name}.key=$WRT_PWD|g" \
+			-e "s/\.disabled=1/\.disabled=0/g" \
+			"$file"
+		if grep -qF ".ssid=$WRT_SSID" "$file" && grep -qF "key=$WRT_PWD" "$file"; then
+			echo "[Settings][OK] WiFi 默认值已生效(旧格式): SSID=$WRT_SSID / psk2 / $file"
+		else
+			echo "[Settings][WARN] 旧格式 WiFi 默认值校验未通过: $file"
+		fi
 	else
-		# 旧 shell 版分支：仅能改 SSID，加密与密码需按该文件格式单独适配
-		sed -i "s/\.ssid=.*/\.ssid=$WRT_SSID/g" "$file"
-		echo "[Settings][WARN] 旧格式 mac80211，仅写入 SSID，加密/密码未处理: $file"
+		# 非默认配置生成器：只提示，不做任何 sed，避免误伤协议脚本
+		echo "[Settings] 跳过（非默认配置生成器，未修改）: $file"
 	fi
 done
 
