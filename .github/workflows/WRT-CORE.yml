@@ -191,6 +191,13 @@ jobs:
           cd $OPENWRT_PATH
           rm -rf ./tmp* ./.config*
           cat $GITHUB_WORKSPACE/$CONFIG_FILE $GITHUB_WORKSPACE/$GENERAL_CONFIG_FILE > .config
+          # x86/64 为单一设备目标，不需要 MULTI_PROFILE / PER_DEVICE_ROOTFS；
+          # 这两项来自共享的 General.config，会让 target/install 的组合镜像生成步骤失败，
+          # 导致 x86-64 不出 .img.gz/.iso/.vmdk/.qcow2/.vhdx 等固件。仅对 x86-64 移除，
+          # 其它平台（IPQ / RAX3000M 等）因 General.config 不变而完全不受影响。
+          if [ "$WRT_TARGET" = "x86-64" ]; then
+            sed -i '/CONFIG_TARGET_MULTI_PROFILE=/d; /CONFIG_TARGET_PER_DEVICE_ROOTFS=/d' .config
+          fi
           $GITHUB_WORKSPACE/scripts/Settings.sh
           make defconfig
 
@@ -263,8 +270,15 @@ jobs:
         run: |
           cd $OPENWRT_PATH
           echo -e "$(nproc) thread compile"
-          make -j$(nproc) || make -j1 || make -j1 V=s
-          echo "status=success" >> $GITHUB_OUTPUT
+          # 注意：不可在 'make ... || make ...' 之后无条件写 status=success，
+          # 否则编译实际失败时工作流仍会显示成功并上传半成品（缺固件镜像）。如实反映结果。
+          make -j$(nproc) || make -j1 V=s
+          if [ $? -eq 0 ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit 1
+          fi
           echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
           echo "FILE_DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
