@@ -9,10 +9,10 @@ on:
         type: string
         default: 'IPQ60XX'
       WRT_SOURCE:
-        description: '源码仓库名. [ LiBwrt-op/openwrt-6.x, VIKINGYFY/immortalwrt, immortalwrt/immortalwrt ]'
+        description: '源码仓库名. [ LiBwrt/LibWrt, VIKINGYFY/immortalwrt, immortalwrt/immortalwrt ]'
         required: false
         type: string
-        default: 'LiBwrt-op/openwrt-6.x'
+        default: 'LiBwrt/LibWrt'
       WRT_BRANCH:
         description: '源码分支名. [ master, main, main-nss, 25.12-nss, owrt, openwrt-24.10, openwrt-25.12 ]'
         required: false
@@ -29,9 +29,9 @@ on:
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
-        default: 'LiBwrt-op/openwrt-6.x'
+        default: 'LiBwrt/LibWrt'
         type: choice
-        options: [ 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt', 'LiBwrt-op/openwrt-6.x' ]
+        options: [ 'LiBwrt/LibWrt', 'VIKINGYFY/immortalwrt', 'immortalwrt/immortalwrt' ]
       WRT_BRANCH:
         default: '25.12-nss'
         required: true
@@ -47,7 +47,7 @@ on:
           - openwrt-25.12
 
 env:
-  REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt-op/openwrt-6.x'}}.git
+  REPO_URL: https://github.com/${{inputs.WRT_SOURCE || 'LiBwrt/LibWrt'}}.git
   REPO_BRANCH: ${{inputs.WRT_BRANCH || '25.12-nss'}}
   CONFIG_FILE: configs/${{inputs.WRT_TARGET}}.config
   GENERAL_CONFIG_FILE: configs/General.config
