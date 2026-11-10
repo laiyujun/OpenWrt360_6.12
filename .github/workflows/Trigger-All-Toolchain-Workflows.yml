@@ -11,11 +11,15 @@ jobs:
     uses: ./.github/workflows/Compile-Toolchain.yml
     with:
       WRT_TARGET: 'IPQ60XX'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   IPQ807X-6_12-Libwrt:
     uses: ./.github/workflows/Compile-Toolchain.yml
     with:
       WRT_TARGET: 'IPQ807X'
+      WRT_SOURCE: 'LiBwrt/LibWrt'
+      WRT_BRANCH: '25.12-nss'
 
   IPQ53XX-6_18-Immortalwrt:
     uses: ./.github/workflows/Compile-Toolchain.yml
