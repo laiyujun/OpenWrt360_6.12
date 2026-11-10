@@ -9,7 +9,7 @@ WRT_SSID=OpenWrt
 #wifi pwd
 WRT_PWD=12345678
 #theme可填 argon / aurora / vantage
-WRT_THEME=argon
+WRT_THEME=aurora
 
 # 移除luci-app-attendedsysupgrade软件包
 find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "/attendedsysupgrade/d" {} +
