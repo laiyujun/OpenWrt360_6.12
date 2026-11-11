@@ -7,11 +7,10 @@
 - **本固件禁止用于任何商业用途，请务必严格遵守国家互联网使用相关法律规定！**
 
 ## 项目说明 [![](https://img.shields.io/badge/-项目基本介绍-FFFFFF.svg)](#项目说明-)
-- 固件默认管理地址：`192.168.10.1` 默认用户：`root` 默认密码：
+- 固件默认管理地址：`192.168.10.1` 默认用户：`root` 默认密码：`无`
 - 源码：[LiBwrt](https://github.com/LiBwrt/LibWrt)
 - 源码：[immortalwrt](https://github.com/immortalwrt/immortalwrt)
 - 源码：[VIKINGYFY/immortalwrt](https://github.com/VIKINGYFY/immortalwrt)
-- 云编译来源：https://github.com/haiibo/OpenWrt
 
 ## 固件下载 [![](https://img.shields.io/badge/-编译状态及下载链接-FFFFFF.svg)](#固件下载-)
 点击下表中 [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?style=flat&logo=hack-the-box)](https://github.com/laiyujun/OpenWrt360_6.12/releases) 即可跳转到该设备固件下载页面
