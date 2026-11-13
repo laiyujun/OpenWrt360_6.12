@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ JDCloud, IPQ50XX, IPQ53XX, IPQ60XX, IPQ807X, x86-64, MT798x(手动编译需配合 WRT_SOURCE=immortalwrt/immortalwrt + WRT_BRANCH=master) ]'
+        description: '编译平台. [ JDCloud, IPQ50XX, IPQ53XX, IPQ60XX, IPQ807X, x86-64, MT798x(手动编译需配合 WRT_SOURCE=VIKINGYFY/immortalwrt + WRT_BRANCH=owrt) ]'
         required: true
         type: string
         default: 'IPQ60XX'
@@ -37,7 +37,7 @@ on:
         default: 'JDCloud'
         required: true
         type: choice
-        description: '配置文件名 (MT798x 需配合 WRT_SOURCE=immortalwrt/immortalwrt + WRT_BRANCH=master)'
+        description: '配置文件名 (MT798x 需配合 WRT_SOURCE=VIKINGYFY/immortalwrt + WRT_BRANCH=owrt)'
         options: [ 'JDCloud', 'IPQ50XX', 'IPQ53XX', 'IPQ60XX', 'IPQ807X', 'x86-64', 'MT798x' ]
       WRT_SOURCE:
         description: '源码仓库名'
