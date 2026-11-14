@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MT798x 固件刷机速查表 (25 机 / VIKINGYFY immortalwrt@owrt)</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#5b6168; --line:#e6e8eb;
+    --A:#1f9d55; --A-bg:#e8f7ee; --B:#d9730d; --B-bg:#fdf0e1; --C:#2563eb; --C-bg:#e8f0fe;
+    --warn:#c0392b; --warn-bg:#fdecea;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5;padding:24px}
+  .wrap{max-width:1280px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .meta{color:var(--sub);font-size:13px;margin-bottom:18px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 20px}
+  .badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
+  .bA{background:var(--A-bg);color:var(--A);border:1px solid var(--A)}
+  .bB{background:var(--B-bg);color:var(--B);border:1px solid var(--B)}
+  .bC{background:var(--C-bg);color:var(--C);border:1px solid var(--C)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .card h2{font-size:16px;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{border:1px solid var(--line);padding:8px 9px;vertical-align:top;text-align:left}
+  th{background:#f0f2f5;font-weight:600;white-space:nowrap}
+  tr:nth-child(even) td{background:#fcfcfd}
+  .chip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--sub)}
+  .fip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;word-break:break-all}
+  .ok{color:var(--A);font-weight:600}
+  .no{color:var(--warn);font-weight:600}
+  .note{font-size:12px;color:var(--sub)}
+  .warn-box{background:var(--warn-bg);border:1px solid var(--warn);color:var(--warn);
+            border-radius:10px;padding:12px 16px;font-size:13px;margin-bottom:16px}
+  .warn-box b{color:var(--warn)}
+  a{color:var(--C);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .small{font-size:11.5px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>MT798x 固件刷机速查表</h1>
+  <div class="meta">源码: VIKINGYFY/immortalwrt @ owrt 分支 (6.18 内核) · 与 IPQ53XX(53xx) 同源码 · 本表依据 filologic.mk 逐设备核对生成，共 25 个编译 profile。</div>
+
+  <div class="legend">
+    <span class="badge bA">A 类 · 保留原厂 U-Boot（不产 FIP）</span>
+    <span class="badge bB">B 类 · OpenWrt U-Boot 路线（产 FIP）</span>
+    <span class="badge bC">C 类 · 双路线可选（ubootmod 分支）</span>
+  </div>
+
+  <div class="warn-box">
+    <b>刷机铁律（违反即变砖）：</b> stock 布局（A 类 / C 类的 -stock 兄弟）用 <b>*-stock-*</b> 镜像，保留原厂 U-Boot；
+    OpenWrt U-Boot 布局（B 类 / C 类的 -ubootmod 分支）用 <b>*-ubootmod-* / 对应 itb</b>，需先刷 FIP 装 OpenWrt U-Boot。
+    二者<b>严禁混用</b>。刷引导件（BL2/FIP）前务必用 nanddump/mtd read 备份原厂分区，并查对应机型的 OpenWrt Wiki 确认偏移与命令。
+  </div>
+
+  <!-- A 类 -->
+  <div class="card">
+    <h2><span class="badge bA">A 类 · 保留原厂 U-Boot（7 个，不产 FIP）</span></h2>
+    <table>
+      <tr><th>设备 profile</th><th>芯片</th><th>产FIP</th><th>固件文件（直接刷）</th><th>刷机要点 / 风险</th><th>Wiki</th></tr>
+      <tr>
+        <td class="chip">cetron_ct3003-stock</td><td>mt7981</td><td class="no">否</td>
+        <td class="fip">*-cetron_ct3003-stock-squashfs-sysupgrade.bin</td>
+        <td class="note">保留原厂 U-Boot；与 C 类 cetron_ct3003-ubootmod 二选一</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ct3003" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_mi-router-ax3000t-stock</td><td>mt7981</td><td class="no">否</td>
+        <td class="fip">*-xiaomi_mi-router-ax3000t-stock-squashfs-sysupgrade.bin</td>
+        <td class="note">保留原厂 U-Boot；注意型号有无 高位/低位 闪存差异</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ax3000t" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_mi-router-wr30u-stock</td><td>mt7981</td><td class="no">否</td>
+        <td class="fip">*-xiaomi_mi-router-wr30u-stock-squashfs-sysupgrade.bin</td>
+        <td class="note">保留原厂 U-Boot</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=wr30u" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_redmi-router-ax6000-stock</td><td>mt7986</td><td class="no">否</td>
+        <td class="fip">*-xiaomi_redmi-router-ax6000-stock-squashfs-sysupgrade.bin</td>
+        <td class="note">保留原厂 U-Boot</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ax6000" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">glinet_gl-mt3000</td><td>mt7981</td><td class="no">否</td>
+        <td class="fip">*-glinet_gl-mt3000-squashfs-sysupgrade.bin</td>
+        <td class="note">GL.iNet 原厂 uboot 兼容；直接刷 stock 镜像即可</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=gl-mt3000" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">ruijie_rg-x60-pro</td><td>mt7986</td><td class="no">否</td>
+        <td class="fip">*-ruijie_rg-x60-pro-squashfs-sysupgrade.bin</td>
+        <td class="note">单 profile，保留原厂 U-Boot；无 FIP 可选</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=rg-x60" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">zyxel_ex5700-telenor</td><td>mt7986</td><td class="no">否</td>
+        <td class="fip">*-zyxel_ex5700-telenor-squashfs-sysupgrade.bin</td>
+        <td class="note">单 profile，保留原厂 U-Boot；无 FIP 可选</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ex5700" target="_blank">查 Wiki</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- B 类 -->
+  <div class="card">
+    <h2><span class="badge bB">B 类 · OpenWrt U-Boot 路线（14 个，产 FIP，先刷 BL2+FIP 再刷 itb）</span></h2>
+    <table>
+      <tr><th>设备 profile</th><th>芯片</th><th>产FIP</th><th>该刷的 FIP / BL2 文件</th><th>固件文件</th><th>刷机要点 / 风险</th><th>Wiki</th></tr>
+      <tr>
+        <td class="chip">abt_asr3000</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-abt_asr3000-sysupgrade.itb</td>
+        <td class="note">先刷 preloader+bl31-uboot.fip 装 OpenWrt U-Boot，再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=asr3000" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">cmcc_rax3000m</td><td>mt7981</td><td class="ok">是(3变体)</td>
+        <td class="fip">emmc-preloader.bin + emmc-bl31-uboot.fip<br>nand-preloader.bin + nand-bl31-uboot.fip<br>ubi-preloader.bin + ubi-bl31-uboot.fip</td>
+        <td class="fip">对应变体 *-sysupgrade.itb（emmc/nand/ubi）</td>
+        <td class="note">按你机器的<b>闪存类型</b>选对应一套 BL2+FIP；选错变体可能变砖</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=rax3000m" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">cmcc_rax3000me</td><td>mt7981</td><td class="ok">是(6变体)</td>
+        <td class="fip">emmc/nand/ubi × ddr3/ddr4 共 6 套：<br>各 emmc-(ddr3|ddr4)-preloader.bin + bl31-uboot.fip<br>各 nand-/ubi- 同上</td>
+        <td class="fip">对应变体 *-sysupgrade.itb</td>
+        <td class="note">按<b>闪存类型 + 内存(dram)规格</b>二选一选对应 FIP；务必查 wiki 确认 ddr3/ddr4</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=rax3000me" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">glinet_gl-mt2500</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-emmc-preloader.bin<br>*-emmc-bl31-uboot.fip</td>
+        <td class="fip">*-glinet_gl-mt2500-sysupgrade.bin<br>*-glinet_gl-mt2500-factory.bin</td>
+        <td class="note">eMMC 设备；可走 factory.bin 用 GL 恢复页直刷，无需动 bootloader；完整转 OpenWrt U-Boot 才刷 FIP</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=gl-mt2500" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">netcore_n60</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-netcore_n60-sysupgrade.itb</td>
+        <td class="note">先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=n60" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">qihoo_360t7</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin（spim-nand-ddr3-1866）<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-qihoo_360t7-sysupgrade.itb</td>
+        <td class="note">SPI-NAND；先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=360t7" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">jcg_q30-pro</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-jcg_q30-pro-sysupgrade.itb</td>
+        <td class="note">先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=q30" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">nokia_ea0326gmp</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-nokia_ea0326gmp-sysupgrade.itb</td>
+        <td class="note">先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ea0326" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">bananapi_bpi-r3-mini</td><td>mt7986</td><td class="ok">是(3)</td>
+        <td class="fip">emmc-bl31-uboot.fip<br>nand-bl31-uboot.fip<br>u-boot.fip（+ 对应 preloader）</td>
+        <td class="fip">*-snand-factory.bin<br>*-sysupgrade.itb</td>
+        <td class="note">开发板，多种启动介质；按你启动方式选 FIP</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=bpi-r3-mini" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">glinet_gl-mt6000</td><td>mt7986</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin（emmc-ddr4）<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-glinet_gl-mt6000-sysupgrade.bin<br>*-glinet_gl-mt6000-factory.bin</td>
+        <td class="note">eMMC；可走 factory.bin 用 GL 恢复页直刷；完整转 OpenWrt U-Boot 才刷 FIP</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=gl-mt6000" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">jdcloud_re-cp-03</td><td>mt7986</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-jdcloud_re-cp-03-sysupgrade.itb</td>
+        <td class="note">先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=re-cp-03" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">netcore_n60-pro</td><td>mt7986</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-bl31-uboot.fip</td>
+        <td class="fip">*-netcore_n60-pro-sysupgrade.itb</td>
+        <td class="note">先刷 BL2+FIP 再刷 itb</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=n60+pro" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">tplink_tl-xdr6086</td><td>mt7986</td><td class="ok">是*</td>
+        <td class="fip">*-bl31-uboot.fip（<b>无独立 preloader 产物</b>）</td>
+        <td class="fip">*-tplink_tl-xdr6086-factory.bin<br>*-tplink_tl-xdr6086-sysupgrade.bin</td>
+        <td class="note">TP-Link 流程特殊：一般 factory.bin 走原厂恢复/Web 直刷；完整转 OpenWrt U-Boot 才用 bl31-uboot.fip（需 UART/TFTP，查 wiki）</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=xdr6086" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">tplink_tl-xdr6088</td><td>mt7986</td><td class="ok">是*</td>
+        <td class="fip">*-bl31-uboot.fip（<b>无独立 preloader 产物</b>）</td>
+        <td class="fip">*-tplink_tl-xdr6088-factory.bin<br>*-tplink_tl-xdr6088-sysupgrade.bin</td>
+        <td class="note">同 xdr6086：factory.bin 直刷最常用；FIP 仅完整转换时用</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=xdr6088" target="_blank">查 Wiki</a></td>
+      </tr>
+    </table>
+    <p class="small">* TP-Link 两款不产出独立 preloader.bin：其 bl31-uboot.fip 配合原厂 eMMC 启动机制使用；常规升级用 factory.bin（内嵌引导）即可，通常<b>无需</b>单独刷 FIP。</p>
+  </div>
+
+  <!-- C 类 -->
+  <div class="card">
+    <h2><span class="badge bC">C 类 · 双路线可选（4 个，ubootmod 分支；对应 -stock 兄弟见 A 类）</span></h2>
+    <table>
+      <tr><th>设备 profile</th><th>芯片</th><th>产FIP</th><th>该刷的 FIP / BL2 文件</th><th>固件文件</th><th>刷机要点 / 风险</th><th>Wiki</th></tr>
+      <tr>
+        <td class="chip">cetron_ct3003-ubootmod</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-cetron_ct3003-ubootmod-bl31-uboot.fip</td>
+        <td class="fip">*-cetron_ct3003-ubootmod-sysupgrade.itb</td>
+        <td class="note">仅用于<b>已刷社区 mod U-Boot</b>的设备；与 A 类 cetron_ct3003-stock 二选一，不可混用</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ct3003" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_mi-router-ax3000t-ubootmod</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-xiaomi_mi-router-ax3000t-ubootmod-bl31-uboot.fip</td>
+        <td class="fip">*-xiaomi_mi-router-ax3000t-ubootmod-sysupgrade.itb</td>
+        <td class="note">仅用于已刷 mod U-Boot；与 A 类 ax3000t-stock 二选一</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ax3000t" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_mi-router-wr30u-ubootmod</td><td>mt7981</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-xiaomi_mi-router-wr30u-ubootmod-bl31-uboot.fip</td>
+        <td class="fip">*-xiaomi_mi-router-wr30u-ubootmod-sysupgrade.itb</td>
+        <td class="note">仅用于已刷 mod U-Boot；与 A 类 wr30u-stock 二选一</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=wr30u" target="_blank">查 Wiki</a></td>
+      </tr>
+      <tr>
+        <td class="chip">xiaomi_redmi-router-ax6000-ubootmod</td><td>mt7986</td><td class="ok">是</td>
+        <td class="fip">*-preloader.bin<br>*-xiaomi_redmi-router-ax6000-ubootmod-bl31-uboot.fip</td>
+        <td class="fip">*-xiaomi_redmi-router-ax6000-ubootmod-sysupgrade.itb</td>
+        <td class="note">仅用于已刷 mod U-Boot；与 A 类 redmi-ax6000-stock 二选一</td>
+        <td><a href="https://openwrt.org/toh/views/toh_fwdownload?dataflt[Model*~]=ax6000" target="_blank">查 Wiki</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>关键说明</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li><b>FIP 是什么：</b>构建产物 <code>bl31-uboot.fip</code>（含 OpenWrt U-Boot + ARM 可信固件 ATF），用来刷进 FIP 分区替换原厂 U-Boot；<code>*-preloader.bin</code> 是 BL2（一级引导，位于 SPI-NAND/NOR 最前端）。两者配合完成"转 OpenWrt U-Boot"。</li>
+      <li><b>文件名前缀含义：</b><code>emmc-/nand-/ubi-/ddr3-/ddr4-</code> 是<b>硬件变体</b>（闪存类型/内存规格），不是 stock/ubootmod 的区别；只有 ubootmod 分支的 FIP 文件名带 <code>-ubootmod</code> 后缀。</li>
+      <li><b>为什么有些型号"只有 ubootmod 的 fip"：</b>因为那 4 个 ubootmod profile 的 FIP 随 profile 名带 <code>-ubootmod</code> 后缀，而其 <code>-stock</code> 兄弟（A 类）不产 FIP，所以看不到 <code>-stock</code> 的 fip——这是预期行为。</li>
+      <li><b>为什么"大部分都有 fip"：</b>B 类 14 个设备本就是 OpenWrt U-Boot 路线（源码里无 stock 变体），都产出 <code>*-设备名-bl31-uboot.fip</code>。</li>
+      <li><b>原厂 U-Boot 能否直接用 ubootmod 镜像 / 反之：</b>不能。分区表不同，混用 = 变砖。A 类与 C 类的同机型两套镜像按你机器当前跑的是哪种 U-Boot 来选。</li>
+      <li><b>刷引导件前：</b>务必备份原厂 BL2/FIP 分区（nanddump / mtd read），并查机型专属 wiki 的偏移与命令。secure boot 机型勿刷非签名 FIP。</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
