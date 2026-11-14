@@ -139,6 +139,31 @@ jobs:
           VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
           echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
 
+      - name: Patch netfilter (消除 nf_conntrack_bridge.ko 文件冲突, 仅 MT798x)
+        run: |
+          # 仅对 MT798x(filogic) 生效, 其它平台行为不变
+          if [ "$WRT_TARGET" != "MT798x" ]; then
+            echo "非 MT798x 目标, 跳过 netfilter 补丁"
+            exit 0
+          fi
+          cd "$OPENWRT_PATH"
+          F=package/kernel/linux/modules/netfilter.mk
+          if [ ! -f "$F" ]; then
+            echo "⚠ 未找到 $F, 跳过(源码结构可能已变化, 需人工核对)"
+            exit 0
+          fi
+          # VIKINGYFY/owrt 额外保留了独立的 kmod-nf-conntrack-bridge 包,
+          # 它与 kmod-nft-bridge(经 NFT_BRIDGE 模块组)都打包同一个 nf_conntrack_bridge.ko,
+          # 两者同入设备 rootfs 时 opkg check_data_file_clashes 冲突, 导致 package/install 失败。
+          # 单纯 CONFIG_PACKAGE_kmod-nf-conntrack-bridge=n 会被选中包的 +依赖覆盖而失效;
+          # 因此构建期直接删除该冗余包定义 —— 等价于 immortalwrt 官方 master 的上游修复, 且与 53xx 同源码。
+          if grep -q "define KernelPackage/nf-conntrack-bridge" "$F"; then
+            sed -i '/^define KernelPackage\/nf-conntrack-bridge$/,/^\$(eval \$(call KernelPackage,nf-conntrack-bridge))$/d' "$F"
+            echo "✅ 已移除冗余 kmod-nf-conntrack-bridge 包定义"
+          else
+            echo "kmod-nf-conntrack-bridge 定义不存在, 跳过(源码可能已修复)"
+          fi
+
       - name: Generate Variables
         run: |
           cp $CONFIG_FILE $OPENWRT_PATH/.config
