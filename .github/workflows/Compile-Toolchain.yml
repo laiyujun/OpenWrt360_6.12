@@ -113,7 +113,7 @@ jobs:
           cp $CONFIG_FILE $OPENWRT_PATH/.config
           cd $OPENWRT_PATH
           make defconfig > /dev/null 2>&1
-          SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
+          SOURCE_REPO="$(basename $REPO_URL .git)"
           echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
           DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
