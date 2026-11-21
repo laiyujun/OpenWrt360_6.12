@@ -35,12 +35,25 @@ jobs:
       WRT_SOURCE: 'immortalwrt/immortalwrt'
       WRT_BRANCH: 'master'
 
-  #RAX3000M-6_12-Immortalwrt:
-  #  uses: ./.github/workflows/Compile-Toolchain.yml
-  #  with:
-  #    WRT_TARGET: 'RAX3000M'
-  #    WRT_SOURCE: 'immortalwrt/immortalwrt'
-  #    WRT_BRANCH: 'master'
+  # 补齐固件工作流需要、但此前未预编译的工具链缓存：
+  # JDCloud(immortalwrt master) 与 x86-64 同源码分支但平台为 qualcommax/ipq60xx，缓存键不同；
+  # 该缓存同时被 JDCloud-6_12-immortalwrt 与 JDCloud-6_12-immortalwrt-NoWiFi 两个固件 job 读取
+  # （WiFi 选项不进入缓存键，故只需一个 job）。
+  IPQ60XX-6_18-Immortalwrt:
+    uses: ./.github/workflows/Compile-Toolchain.yml
+    with:
+      WRT_TARGET: 'IPQ60XX'
+      WRT_SOURCE: 'immortalwrt/immortalwrt'
+      WRT_BRANCH: 'master'
+
+  # MT798x 与 IPQ53XX 同源码分支(VIKINGYFY/owrt)但平台为 mediatek/filogic，缓存键不同；
+  # MT798x-filogic-VIKINGYFY 固件 job 需读取此缓存。
+  MT798x-6_18-Immortalwrt:
+    uses: ./.github/workflows/Compile-Toolchain.yml
+    with:
+      WRT_TARGET: 'MT798x'
+      WRT_SOURCE: 'VIKINGYFY/immortalwrt'
+      WRT_BRANCH: 'owrt'
 
   Delete-Old-Workflows:
     uses: ./.github/workflows/Delete-Old-Workflows.yml

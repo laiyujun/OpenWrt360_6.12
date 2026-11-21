@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       WRT_TARGET:
-        description: '编译平台. [ IPQ53XX, IPQ60XX, IPQ807X, x86-64 ]'
+        description: '编译平台. [ IPQ53XX, IPQ60XX, IPQ807X, x86-64, MT798x ]'
         required: true
         type: string
         default: 'IPQ60XX'
@@ -21,11 +21,11 @@ on:
   workflow_dispatch:
     inputs:
       WRT_TARGET:
-        default: 'JDCloud'
+        default: 'IPQ60XX'
         required: true
         type: choice
         description: '配置文件名'
-        options: [ 'IPQ53XX', 'IPQ60XX', 'IPQ807X', 'x86-64' ]
+        options: [ 'IPQ53XX', 'IPQ60XX', 'IPQ807X', 'x86-64', 'MT798x' ]
       WRT_SOURCE:
         description: '源码仓库名'
         required: true
@@ -106,9 +106,7 @@ jobs:
           cd openwrt
           echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
           VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
-          echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV        
-          VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12 || grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.18)
-          echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
+          echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
 
       - name: Generate Variables
         run: |
