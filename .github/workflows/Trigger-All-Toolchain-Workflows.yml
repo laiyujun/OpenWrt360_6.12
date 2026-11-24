@@ -3,7 +3,7 @@ name: Trigger-All-Toolchain-Workflows  # 主要工作流的名称
 on:
   workflow_dispatch:  # 手动触发：通过 GitHub UI 来触发
   schedule:
-    - cron: 42 18 * * 4  # 北京时间周四18:42计划，反向提前5.5h抵消延迟，预期实际周五约00:12
+    - cron: 42 18 * * 5  # 北京时间周五18:42计划，反向提前5.5h抵消延迟，预期实际周六约00:12
       timezone: 'Asia/Shanghai'
 
 jobs:
