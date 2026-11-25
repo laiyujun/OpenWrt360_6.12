@@ -16,10 +16,14 @@ find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "/attendeds
 # 修改 collections 依赖：只决定哪个主题包被编进固件，不决定开机显示哪个主题
 find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "s/luci-theme-bootstrap/luci-theme-$WRT_THEME/g" {} +
 # 修改默认主题：真正生效的是 luci.main.mediaurlbase
+# 注意: 必须只精确改 mediaurlbase 这一行, 绝不能碰 resourcebase!
+# resourcebase 是 LuCI 核心 JS/CSS 框架目录(/luci-static/resources), 与主题无关;
+# 早前用 "s|/luci-static/[a-zA-Z0-9_-]*|...|g" 会把它一并改成主题名,
+# 导致登录后核心资源 404、菜单无法渲染(7a80e98 引入, 换任何主题都无菜单)。
 THEME_CFG="./feeds/luci/modules/luci-base/root/etc/config/luci"
 if [ -f "$THEME_CFG" ]; then
-	sed -i "s|/luci-static/[a-zA-Z0-9_-]*|/luci-static/$WRT_THEME|g" "$THEME_CFG"
-	grep -m1 "mediaurlbase" "$THEME_CFG" | sed 's/^/[Settings] /'
+	sed -i "s|\(option mediaurlbase \).*|\1'/luci-static/$WRT_THEME'|" "$THEME_CFG"
+	grep -E "mediaurlbase|resourcebase" "$THEME_CFG" | sed 's/^/[Settings] /'
 else
 	echo "[Settings][WARN] 未找到 $THEME_CFG，跳过 mediaurlbase 修改"
 fi
@@ -31,11 +35,14 @@ mkdir -p ./files/etc/uci-defaults
 cat > ./files/etc/uci-defaults/99-init-settings <<EOF
 #!/bin/sh
 uci set luci.main.mediaurlbase='/luci-static/$WRT_THEME'
+# 复位 resourcebase: 核心 JS/CSS 框架目录, 必须指向 /luci-static/resources, 与主题无关
+# (防御运行时被其它主题/插件脚本误改, 避免登录后菜单不渲染)
+uci set luci.main.resourcebase='/luci-static/resources'
 uci commit luci
 exit 0
 EOF
 chmod +x ./files/etc/uci-defaults/99-init-settings
-echo "[Settings][OK] 默认主题设为 $WRT_THEME (files/etc/uci-defaults/99-init-settings)"
+echo "[Settings][OK] 默认主题设为 $WRT_THEME, resourcebase 复位为 /luci-static/resources (files/etc/uci-defaults/99-init-settings)"
 #修改immortalwrt.lan关联IP
 find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js" -exec sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" {} +
 #添加编译日期标识
