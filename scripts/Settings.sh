@@ -9,7 +9,9 @@ WRT_SSID=OpenWrt
 #wifi pwd
 WRT_PWD=12345678
 #theme可填 argon / aurora / vantage
-WRT_THEME=aurora
+# 默认主题切回 argon 做验证: 此前"登录后无菜单"真因是 sed 误改 resourcebase(已修),
+# 与 argon 本身无关; 本次重编译验证 argon + resourcebase 修复下菜单正常。
+WRT_THEME=argon
 
 # 移除luci-app-attendedsysupgrade软件包
 find ./feeds/luci/collections/ -type f -name "Makefile" -exec sed -i "/attendedsysupgrade/d" {} +
